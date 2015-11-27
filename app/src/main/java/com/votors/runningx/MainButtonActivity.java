@@ -71,6 +71,7 @@ public class MainButtonActivity extends Activity implements
                 button_start.setText("START:" + ++count_start);
                 stop = false;
                 locations.clear();
+                curr_distance = 0;
                 getLocation();
                 Log.i(TAG, "start onclick..");
             }
