@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">RunningX</string>
+    <string name="start">START</string>
+    <string name="stop">STOP</string>
+    <string name="chart">CHART</string>
+    <string name="pause">PAUSE</string>
+    <string name="map">MAP</string>
 </resources>
