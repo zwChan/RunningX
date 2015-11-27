@@ -1,24 +1,30 @@
 package com.votors.runningx;
 //EarthQuake
 
+import android.location.Location;
 import android.util.Log;
+
+import java.io.Serializable;
 import 	java.util.Date;
 
 /**
  * Created by Jason on 2015/11/26 0026.
  */
-public class GpsRec {
+public class GpsRec implements Serializable {
     private double lat, lng, alt;
+    public float distance;
+    public float speed;
     private Date date;
+    transient public Location loc;  // only for computing
     public static final String TAG = "GpsRec";
 
-    protected GpsRec(Date date, double lat, double lng, double alt) {
+    protected GpsRec(Date date, Location l) {
         super();
-        this.lat = lat;
-        this.lng = lng;
-        this.alt = alt;
+        this.lat = l.getLatitude();
+        this.lng = l.getLongitude();
+        this.alt = l.getAltitude();
         this.date = date;
-        Log.i(TAG, String.format("Location: %s, %.2f, %.2f, %2f", date, lat,lng, alt));
+        this.loc = l;
     }
 
     public double getLat() {
@@ -33,4 +39,9 @@ public class GpsRec {
         return alt;
     }
     public Date  getDate() {return date;}
+
+    @Override
+    public String toString() {
+        return  String.format("Location: %s, %.2f, %.2f, %.2f, dist=%.2f, sp=%f", date, lat,lng, alt, distance,speed);
+    }
 }

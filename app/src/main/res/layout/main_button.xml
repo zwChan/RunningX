@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/button_start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="50dip"
+        android:layout_marginTop="10dip"
+        android:layout_marginRight="50dip"
+        android:background="@color/green"
+        android:text="@string/start" >
+    </Button>
+    <Button
+        android:id="@+id/button_pause"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/button_start"
+        android:textColor="@color/yellow"
+        android:layout_marginTop="10dip"
+        android:layout_marginLeft="50dip"
+        android:layout_marginRight="50dip"
+        android:text="@string/pause" >
+    </Button>
+    <Button
+        android:id="@+id/button_map"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red"
+        android:layout_marginLeft="50dip"
+        android:layout_marginRight="50dip"
+        android:layout_marginTop="10dip"
+        android:text="@string/map"
+        android:layout_below="@+id/button_pause"
+        android:layout_alignParentStart="true">
+    </Button>
+    <Button
+        android:id="@+id/button_stop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red"
+        android:layout_marginLeft="50dip"
+        android:layout_marginRight="50dip"
+        android:layout_marginTop="10dip"
+        android:text="@string/stop"
+        android:layout_below="@+id/button_map"
+        android:layout_alignParentStart="true">
+    </Button>
+    <Button
+        android:id="@+id/button_chart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/button_stop"
+        android:layout_marginLeft="50dip"
+        android:layout_marginRight="50dip"
+        android:layout_marginTop="10dip"
+
+        android:textColor="@color/blue"
+        android:text="@string/chart" >
+    </Button>
+
+</RelativeLayout>
