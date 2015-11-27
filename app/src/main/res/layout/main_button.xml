@@ -19,7 +19,7 @@
         android:id="@+id/button_speed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#0000aa"
+        android:background="#00aa00"
         android:gravity="center_horizontal"
         android:layout_below="@id/button_distance"
         android:text="@string/speed"

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,6 +37,9 @@ public class MainButtonActivity extends Activity implements
 
     TextView text_dist = null;
     TextView text_speed = null;
+
+    // Handler gets created on the UI-thread
+    private Handler mHandler = new Handler();
 
     GoogleApiClient mGoogleApiClient = null;
 
@@ -80,7 +84,7 @@ public class MainButtonActivity extends Activity implements
                     stop = false;
                     getLocation();
 
-                }else{
+                } else {
                     button_pause.setText("RESUME:" + ++count_start);
                     pause = true;
                     stop = true;
@@ -104,7 +108,7 @@ public class MainButtonActivity extends Activity implements
             public void onClick(View v) {
                 button_stop.setText("STOP:" + ++count_stop);
                 intent.putExtra(EXTRA_MESSAGE, locations);
-                stop=true;
+                stop = true;
                 Log.i(TAG, "stop onclick..");
                 startActivity(intent);
             }
@@ -117,17 +121,20 @@ public class MainButtonActivity extends Activity implements
             }
         });
     }
+
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.i(TAG, "onConnected!!!!!!!!!!!");
-       getLocation();
+        getLocation();
     }
+
     @Override
-    public void onConnectionSuspended(int var1){
+    public void onConnectionSuspended(int var1) {
         Log.i(TAG, "onConnectionSuspended!!!!!!!!!!!");
     }
+
     @Override
-    public  void onConnectionFailed(ConnectionResult var1) {
+    public void onConnectionFailed(ConnectionResult var1) {
         Log.i(TAG, "onConnectionFailed!!!!!!!!!!!");
     }
 
@@ -138,6 +145,7 @@ public class MainButtonActivity extends Activity implements
             e.printStackTrace();
         }
     }
+
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -145,8 +153,9 @@ public class MainButtonActivity extends Activity implements
                 .addApi(LocationServices.API)
                 .build();
     }
+
     private void getLocation() {
-        Log.i(TAG,  "call get location.");
+        Log.i(TAG, "call get location.");
         if (start_thread)
             return;
 
@@ -157,7 +166,7 @@ public class MainButtonActivity extends Activity implements
                 int cnt = 0;
                 while (true) {
                     sleep(INTERVAL);
-                    if (stop)continue;
+                    if (stop) continue;
 
                     Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                             mGoogleApiClient);
@@ -167,22 +176,22 @@ public class MainButtonActivity extends Activity implements
                         double alt = mLastLocation.getAltitude();
                         saveLocation(mLastLocation);
                     }
-                    Log.i(TAG,  "cnt=" + cnt++ );
+                    Log.i(TAG, "cnt=" + cnt++);
                 }
             }
         }).start();
     }
 
     void saveLocation(Location l) {
-        float dist = 0, speed=0;
+        float dist = 0, speed = 0;
         Date date = new Date();
-        if (locations.size()>0) {
-            GpsRec pre = locations.get(locations.size()-1);
+        if (locations.size() > 0) {
+            GpsRec pre = locations.get(locations.size() - 1);
             dist = pre.loc.distanceTo(l);
-            if(dist<MIN_DISTANCE) {
+            if (dist < MIN_DISTANCE) {
                 return;
             }
-            speed=dist/((date.getTime()-pre.getDate().getTime()*1000));
+            speed = dist / ((date.getTime() - pre.getDate().getTime() * 1000));
         }
 
         GpsRec gps = new GpsRec(date, l);
@@ -191,9 +200,13 @@ public class MainButtonActivity extends Activity implements
         locations.add(gps);
         curr_speed = speed;
         curr_distance += dist;
-        text_speed.setText(String.format("%.2f m/s", curr_speed));
-        text_dist.setText(String.format("%.2f m", curr_distance));
-        Log.i(TAG,String.format("%.2f m, %.2f m/s, loc # %.2f", curr_distance, curr_speed, locations.size()));
-    }
 
+        mHandler.post(new Runnable() {
+            public void run() {
+                text_speed.setText(String.format("%.2f m/s", curr_speed));
+                text_dist.setText(String.format("%.2f m", curr_distance));
+                Log.i(TAG, String.format("%.2f m, %.2f m/s, loc # %d", curr_distance, curr_speed, locations.size()));
+            }
+        });
+    }
 }
