@@ -1,14 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/button_distance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00aa00"
+        android:gravity="center_horizontal"
+        android:text="@string/distance"
+        android:layout_marginLeft="100dip"
+        android:layout_marginTop="10dip"
+        android:layout_marginRight="100dip"
+        android:textSize="24sp" />
+
+    <!-- TextView with layout weight of 1 out of 4 -->
+
+    <TextView
+        android:id="@+id/button_speed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#0000aa"
+        android:gravity="center_horizontal"
+        android:layout_below="@id/button_distance"
+        android:text="@string/speed"
+        android:layout_marginLeft="100dip"
+        android:layout_marginTop="10dip"
+        android:layout_marginRight="100dip"
+        android:textSize="24sp" />
 
     <Button
         android:id="@+id/button_start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_below="@id/button_speed"
         android:layout_marginLeft="50dip"
-        android:layout_marginTop="10dip"
+        android:layout_marginTop="30dip"
         android:layout_marginRight="50dip"
         android:background="@color/green"
         android:text="@string/start" >
@@ -62,5 +89,11 @@
         android:textColor="@color/blue"
         android:text="@string/chart" >
     </Button>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/button_start"></TableRow>
 
 </RelativeLayout>

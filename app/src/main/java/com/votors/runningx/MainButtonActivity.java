@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -28,7 +29,13 @@ public class MainButtonActivity extends Activity implements
     int count_chart = 0;
     Boolean stop = false;
     Boolean pause = false;
+    Boolean start_thread = false;
+    float curr_speed = 0;
+    float curr_distance = 0;
     ArrayList<GpsRec> locations = new ArrayList<>();
+
+    TextView text_dist = null;
+    TextView text_speed = null;
 
     GoogleApiClient mGoogleApiClient = null;
 
@@ -48,6 +55,8 @@ public class MainButtonActivity extends Activity implements
         final Button button_map = (Button) findViewById(R.id.button_map);
         final Button button_stop = (Button) findViewById(R.id.button_stop);
         final Button button_chart = (Button) findViewById(R.id.button_chart);
+        text_dist = (TextView) findViewById(R.id.button_distance);
+        text_speed = (TextView) findViewById(R.id.button_speed);
         buildGoogleApiClient();
         mGoogleApiClient.connect();
 
@@ -138,13 +147,17 @@ public class MainButtonActivity extends Activity implements
     }
     private void getLocation() {
         Log.i(TAG,  "call get location.");
+        if (start_thread)
+            return;
+
+        start_thread = true;
         new Thread(new Runnable() {
             @Override
             public void run() {
                 int cnt = 0;
                 while (true) {
-                    if (stop)break;
                     sleep(INTERVAL);
+                    if (stop)continue;
 
                     Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                             mGoogleApiClient);
@@ -176,6 +189,11 @@ public class MainButtonActivity extends Activity implements
         gps.distance = dist;
         gps.speed = speed;
         locations.add(gps);
+        curr_speed = speed;
+        curr_distance += dist;
+        text_speed.setText(String.format("%.2f m/s", curr_speed));
+        text_dist.setText(String.format("%.2f m", curr_distance));
+        Log.i(TAG,String.format("%.2f m, %.2f m/s, loc # %.2f", curr_distance, curr_speed, locations.size()));
     }
 
 }

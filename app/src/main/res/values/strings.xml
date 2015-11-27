@@ -5,4 +5,6 @@
     <string name="chart">CHART</string>
     <string name="pause">PAUSE</string>
     <string name="map">MAP</string>
+    <string name="distance">Distance</string>
+    <string name="speed">Speed</string>
 </resources>
