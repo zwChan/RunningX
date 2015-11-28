@@ -23,9 +23,9 @@
         android:id="@+id/pace"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        androidPlot.title="Speed(m/s)"
-        androidPlot.domainLabel="Domain"
-        androidPlot.rangeLabel="Range"
+        androidPlot.title="Speed"
+        androidPlot.domainLabel="Distance(m)"
+        androidPlot.rangeLabel="Speed(m/s)"
         androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size"
         androidPlot.domainLabelWidget.labelPaint.textSize="@dimen/domain_label_font_size"
         androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size"
@@ -42,5 +42,5 @@
         androidPlot.legendWidget.iconSizeMetrics.widthMetric.value="15dp"
         androidPlot.legendWidget.heightMetric.value="25dp"
         androidPlot.legendWidget.positionMetrics.anchor="right_bottom"
-        androidPlot.graphWidget.gridLinePaint.color="#000000"/>
+        androidPlot.graphWidget.gridLinePaint.color="#33ff55"/>
 </LinearLayout>

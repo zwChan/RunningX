@@ -56,7 +56,7 @@ public class ChartActivity extends Activity{
         XYSeries series1 = new SimpleXYSeries(
                 xDist,          // SimpleXYSeries takes a List so turn our array into a List
                 yPace,
-                "Speed(m/s)");                             // Set the display title of the series
+                "");                             // Set the display title of the series
 
         // Create a formatter to use for drawing a series using LineAndPointRenderer
         // and configure it from xml:
