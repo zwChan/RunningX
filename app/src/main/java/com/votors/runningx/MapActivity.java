@@ -141,7 +141,7 @@ public class MapActivity extends Activity {
                 last = locations.get(locations.size() - 1);
                 polylines.add(new LatLng(last.getLat(),last.getLng()));
             }
-            if (Math.floor(total_dist/DISTAN_MARK) != Math.floor(total_dist+rec.distance/DISTAN_MARK)) {
+            if (movePointCnt == 0 || Math.floor(total_dist/DISTAN_MARK) != Math.floor(total_dist+rec.distance/DISTAN_MARK)) {
                 // Add a new marker
                 MarkerOptions mk = new MarkerOptions()
                         .position(new LatLng(rec.getLat(), rec.getLng()));
