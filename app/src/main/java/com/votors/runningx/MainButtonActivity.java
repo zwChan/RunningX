@@ -234,5 +234,10 @@ public class MainButtonActivity extends Activity implements
         sendOrderedBroadcast(msg,null);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mGoogleApiClient.disconnect();
+    }
 
 }
