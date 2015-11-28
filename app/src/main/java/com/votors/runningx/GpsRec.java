@@ -42,6 +42,6 @@ public class GpsRec implements Serializable {
 
     @Override
     public String toString() {
-        return  String.format("Location: %s, %.2f, %.2f, %.2f, dist=%.2f, sp=%f", date, lat,lng, alt, distance,speed);
+        return  String.format("Location: %s, %.6f, %.6f, %.2f, dist=%.2f, sp=%f", date, lat,lng, alt, distance,speed);
     }
 }
