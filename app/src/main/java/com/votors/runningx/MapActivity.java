@@ -3,6 +3,7 @@ package com.votors.runningx;
  * Created by Jason on 2015/11/26 0026.
  */
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,7 +23,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 
-public class MapActivity extends AppCompatActivity {
+public class MapActivity extends Activity {
 
     // Coordinates used for centering the Map
     public final static String EXTRA_MESSAGE = "com.votors.runningx.MESSAGE";
