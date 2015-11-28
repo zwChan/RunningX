@@ -119,11 +119,15 @@ public class MainButtonActivity extends Activity implements
                 startActivity(intent);
             }
         });
+
+        final Intent intent_chart = new Intent(this, ChartActivity.class);
         button_chart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 button_chart.setText("CHART:" + ++count_chart);
                 Log.i(TAG, "chart onclick..");
+                intent_chart.putExtra(EXTRA_MESSAGE, locations);
+                startActivity(intent_chart);
             }
         });
     }

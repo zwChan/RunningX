@@ -25,7 +25,6 @@ import java.util.ArrayList;
 
 public class MapActivity extends Activity {
 
-    // Coordinates used for centering the Map
     public final static String EXTRA_MESSAGE = "com.votors.runningx.MESSAGE";
     private static final String BC_INTENT = "com.votors.runningx.BroadcastReceiver.location";
     public final static String EXTRA_GpsRec = "com.votors.runningx.GpsRec";

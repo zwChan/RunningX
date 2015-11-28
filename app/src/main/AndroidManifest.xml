@@ -35,6 +35,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainButtonActivity" />
         </activity>
+
+        <activity
+            android:name=".ChartActivity"
+            android:parentActivityName=".MainButtonActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainButtonActivity" />
+        </activity>
+
+
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCFdf3melpmATPCyURfZcNyWLn7Wn_cbzo" />
