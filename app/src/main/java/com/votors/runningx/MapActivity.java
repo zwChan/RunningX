@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,6 +42,9 @@ public class MapActivity extends AppCompatActivity {
     double total_dist = 0;
     double center_lat = 0;
     double center_lng = 0;
+
+    int movePointCnt = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +82,7 @@ public class MapActivity extends AppCompatActivity {
                     if (cnt==1) {
                         mk.title(String.valueOf("start"));
                     }else{
-                        mk.title(String.format("%.0f,%.1fm/s", Math.floor(total_dist + rec.distance), rec.speed));
+                        mk.title(String.format("%.0fm,%.1fm/s", Math.floor(total_dist + rec.distance), rec.speed));
                     }
 
                     // Set the color for the Marker
@@ -145,11 +147,12 @@ public class MapActivity extends AppCompatActivity {
                         .position(new LatLng(rec.getLat(), rec.getLng()));
 
                 // Set the title of the Marker's information window
-                mk.title(String.format("%.0f,%.1fm/s",Math.floor(total_dist + rec.distance),rec.speed));
+                mk.title(String.format("%.0fm,%.1fm/s",Math.floor(total_dist + rec.distance),rec.speed));
                 // Set the color for the Marker
                 mk.icon(BitmapDescriptorFactory.defaultMarker(getMarkerColor(rec.speed)));
                 mMap.addMarker(mk);
             }
+            movePointCnt++;
             total_dist += rec.distance;
             center_lat += rec.getLat();
             center_lng += rec.getLng();
@@ -158,7 +161,7 @@ public class MapActivity extends AppCompatActivity {
             polylines.add(new LatLng(rec.getLat(), rec.getLng()));
             mMap.addPolyline(polylines);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(rec.getLat(), rec.getLng())));
-            mMap.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL+2));
+            if (movePointCnt == 1)mMap.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL+2));
         }
 
     }
