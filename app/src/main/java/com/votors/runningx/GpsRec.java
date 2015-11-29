@@ -11,7 +11,7 @@ import 	java.util.Date;
  * Created by Jason on 2015/11/26 0026.
  */
 public class GpsRec implements Serializable {
-    private double lat, lng, alt;
+    public double lat, lng, alt;
     public float distance;
     public float speed;
     private Date date;

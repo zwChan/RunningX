@@ -197,8 +197,8 @@ public class MainButtonActivity extends Activity implements
     }
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setInterval(INTERVAL_LOCATION*2);
+        mLocationRequest.setFastestInterval(INTERVAL_LOCATION);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
     protected void startLocationUpdates() {
@@ -230,6 +230,7 @@ public class MainButtonActivity extends Activity implements
 
     void saveLocation(Location l) {
         float dist = 0, speed = 0;
+        double alt=0;
         Date date = new Date();
         if (locations.size() > 0) {
             GpsRec pre = locations.get(locations.size() - 1);
@@ -241,21 +242,26 @@ public class MainButtonActivity extends Activity implements
             }
             //get a temporal speed, and it will be corrected by a average speed.
             speed = dist / ((date.getTime() - pre.getDate().getTime()) / 1000);
+            alt = l.getAltitude();
         }
 
         // speed: get the avg speed of SPEED_AVG points
         if (locations.size()>=SPEED_AVG) {
             float dist_avg = dist;
+            double alt_avg = alt;
             for (int i=0; i<SPEED_AVG-1; i++) {
                 dist_avg += locations.get(locations.size() - 1 - i).distance;
+                alt_avg += locations.get(locations.size() - 1 - i).getAlt();
             }
             GpsRec preN = locations.get(locations.size() -SPEED_AVG);
             speed = dist_avg / (1.0f * (date.getTime() - preN.getDate().getTime()) / 1000);
+            alt = alt_avg / (SPEED_AVG);
         }
 
         final GpsRec gps = new GpsRec(date, l);
         gps.distance = dist;
         gps.speed = speed;
+        gps.alt = alt;
         locations.add(gps);
         curr_speed = speed;
         curr_distance += dist;
