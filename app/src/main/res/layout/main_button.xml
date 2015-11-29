@@ -2,10 +2,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
     <TextView
+        android:id="@+id/button_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#aaeeaa"
+        android:gravity="center_horizontal"
+        android:text="@string/time"
+        android:layout_marginLeft="100dip"
+        android:layout_marginTop="10dip"
+        android:layout_marginRight="100dip"
+        android:textSize="24sp" />
+    <TextView
         android:id="@+id/button_distance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#00aa00"
+        android:layout_below="@id/button_time"
         android:gravity="center_horizontal"
         android:text="@string/distance"
         android:layout_marginLeft="100dip"

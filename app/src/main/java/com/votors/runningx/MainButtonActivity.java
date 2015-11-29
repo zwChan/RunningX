@@ -32,11 +32,14 @@ public class MainButtonActivity extends Activity implements
     Boolean stop = true;
     Boolean firstStart = true;
     float curr_speed = 0;
+    long total_time = 0;
+    long last_time = 0;
     float curr_distance = 0;
     ArrayList<GpsRec> locations = new ArrayList<>();
 
     TextView text_dist = null;
     TextView text_speed = null;
+    TextView text_time = null;
 
     // Handler gets created on the UI-thread
     private Handler mHandler = new Handler();
@@ -52,6 +55,7 @@ public class MainButtonActivity extends Activity implements
     private final int MIN_DISTANCE = 5;
     private final int INTERVAL_LOCATION = 5000;
     private final int DISTANCE_SHOWTOAST = 100;
+    private final int SPEED_AVG = 3;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +70,7 @@ public class MainButtonActivity extends Activity implements
         final Button button_chart = (Button) findViewById(R.id.button_chart);
         text_dist = (TextView) findViewById(R.id.button_distance);
         text_speed = (TextView) findViewById(R.id.button_speed);
+        text_time = (TextView) findViewById(R.id.button_time);
         buildGoogleApiClient();
         mGoogleApiClient.connect();
         createLocationRequest();
@@ -76,11 +81,13 @@ public class MainButtonActivity extends Activity implements
         button_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                last_time = System.currentTimeMillis();
                 if (firstStart) {
                     firstStart = false;
                     locations.clear();
                     curr_distance = 0;
                     curr_speed = 0;
+                    total_time = 0;
                 }
                 if (stop) {
                     //current is stop, we will start it
@@ -130,6 +137,30 @@ public class MainButtonActivity extends Activity implements
                 startActivity(intent_chart);
             }
         });
+
+        // update the time
+        Thread thread = new Thread()
+        {
+            @Override
+            public void run() {
+                try {
+                    while(true) {
+                        sleep(1000);
+                        if (stop) continue;
+                        total_time += System.currentTimeMillis() - last_time;
+                        last_time = System.currentTimeMillis();
+                        long total_time_tmp = total_time / 1000;
+                        final String timeStr = String.format("%d:%02d:%02d", total_time_tmp / 3600, total_time_tmp % 3600 / 60, total_time_tmp % 3600 % 60);
+                        mHandler.post(new Runnable() {
+                            public void run() {
+                                text_time.setText(timeStr);
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {}
+            }
+        };
+        thread.start();
     }
 
     @Override
@@ -208,7 +239,18 @@ public class MainButtonActivity extends Activity implements
                 Log.i(TAG, String.format("dist too small. %f", dist));
                 return;
             }
+            //get a temporal speed, and it will be corrected by a average speed.
             speed = dist / ((date.getTime() - pre.getDate().getTime()) / 1000);
+        }
+
+        // speed: get the avg speed of SPEED_AVG points
+        if (locations.size()>=SPEED_AVG) {
+            float dist_avg = dist;
+            for (int i=0; i<SPEED_AVG-1; i++) {
+                dist_avg += locations.get(locations.size() - 1 - i).distance;
+            }
+            GpsRec preN = locations.get(locations.size() -SPEED_AVG);
+            speed = dist_avg / (1.0f * (date.getTime() - preN.getDate().getTime()) / 1000);
         }
 
         final GpsRec gps = new GpsRec(date, l);
@@ -217,10 +259,13 @@ public class MainButtonActivity extends Activity implements
         locations.add(gps);
         curr_speed = speed;
         curr_distance += dist;
+        total_time += date.getTime() - last_time;
+        last_time = date.getTime();
         Log.i(TAG, String.format("%s", gps.toString()));
 
+
         // Do something in the main thread about the views.
-        final Boolean showToast = Math.floor(curr_distance/DISTANCE_SHOWTOAST) != Math.floor((curr_distance-dist)/DISTANCE_SHOWTOAST);
+        final Boolean showToast = (int)Math.floor(curr_distance/DISTANCE_SHOWTOAST) != (int)Math.floor((curr_distance-dist)/DISTANCE_SHOWTOAST);
         mHandler.post(new Runnable() {
             public void run() {
                 text_speed.setText(String.format("%.2f m/s", curr_speed));

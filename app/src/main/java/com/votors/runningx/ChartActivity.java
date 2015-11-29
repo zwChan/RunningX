@@ -29,6 +29,7 @@ public class ChartActivity extends Activity{
     int movePointCnt = 0;
 
     private XYPlot plotPace;
+    private XYPlot plotAlt;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -37,25 +38,32 @@ public class ChartActivity extends Activity{
 
         // fun little snippet that prevents users from taking screenshots
         // on ICS+ devices :-)
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE);
+        /*getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE);*/
         setContentView(R.layout.main_chart);
         locations = (ArrayList<GpsRec>)getIntent().getSerializableExtra(EXTRA_MESSAGE);
-        ArrayList<Float> xDist = new ArrayList<>();
+        ArrayList<Integer> xDist = new ArrayList<>();
         ArrayList<Float> yPace = new ArrayList<>();
+        ArrayList<Integer> yAlt = new ArrayList<>();
 
         for (GpsRec rec: locations) {
             total_dist += rec.distance;
-            xDist.add(total_dist);
-            yPace.add(rec.speed);
+            xDist.add(Math.round(total_dist));
+            yPace.add(Math.round(rec.speed*10)*1.0f/10);
+            yAlt.add((int)Math.round(rec.getAlt()));
         }
         // initialize our XYPlot reference:
         plotPace = (XYPlot) findViewById(R.id.pace);
+        plotAlt = (XYPlot) findViewById(R.id.altitude);
 
         // Turn the above arrays into XYSeries':
         XYSeries series1 = new SimpleXYSeries(
                 xDist,          // SimpleXYSeries takes a List so turn our array into a List
                 yPace,
+                "");                             // Set the display title of the series
+        XYSeries series2 = new SimpleXYSeries(
+                xDist,          // SimpleXYSeries takes a List so turn our array into a List
+                yAlt,
                 "");                             // Set the display title of the series
 
         // Create a formatter to use for drawing a series using LineAndPointRenderer
@@ -67,10 +75,13 @@ public class ChartActivity extends Activity{
 
         // add a new series' to the xyplot:
         plotPace.addSeries(series1, series1Format);
+        plotAlt.addSeries(series2, series1Format);
 
         // reduce the number of range labels
         plotPace.setTicksPerRangeLabel(3);
+        plotAlt.setTicksPerRangeLabel(3);
         plotPace.getGraphWidget().setDomainLabelOrientation(-45);
+        plotAlt.getGraphWidget().setDomainLabelOrientation(-45);
     }
 
 }

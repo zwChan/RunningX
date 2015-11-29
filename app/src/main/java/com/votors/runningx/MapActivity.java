@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,7 +28,7 @@ public class MapActivity extends Activity {
     private static final String BC_INTENT = "com.votors.runningx.BroadcastReceiver.location";
     public final static String EXTRA_GpsRec = "com.votors.runningx.GpsRec";
 
-    public final static int DISTAN_MARK = 100;
+    public final static int MARK_DISTANCE = 100;
     public final static int ZOOM_LEVEL = 15;
     // The Map Object
     private GoogleMap mMap;
@@ -70,10 +69,12 @@ public class MapActivity extends Activity {
         if (null != mMap && locations != null) {
             // Add a marker for every earthquake
             int cnt = 0;
+            // If already run a long way, distance between mark should be larger.
+            int mark_distance = locations.size()>200 ? MARK_DISTANCE*10: MARK_DISTANCE;
             for (GpsRec rec: locations) {
                 Log.i(TAG, rec.toString());
                 cnt++;
-                if (cnt==1 || cnt == locations.size() || Math.floor(total_dist/DISTAN_MARK) != Math.floor(total_dist+rec.distance/DISTAN_MARK)) {
+                if (cnt==1 || cnt == locations.size() || (int)Math.floor(total_dist/ mark_distance) != (int)Math.floor((total_dist+rec.distance)/ mark_distance)) {
                     // Add a new marker
                     MarkerOptions mk = new MarkerOptions()
                             .position(new LatLng(rec.getLat(), rec.getLng()));
@@ -141,7 +142,10 @@ public class MapActivity extends Activity {
                 last = locations.get(locations.size() - 1);
                 polylines.add(new LatLng(last.getLat(),last.getLng()));
             }
-            if (movePointCnt == 0 || Math.floor(total_dist/DISTAN_MARK) != Math.floor(total_dist+rec.distance/DISTAN_MARK)) {
+
+            // If already run a long way, distance between mark should be larger.
+            int mark_distance = locations.size()>200 ? MARK_DISTANCE*10: MARK_DISTANCE;
+            if (movePointCnt == 0 || (int)Math.floor(total_dist/ mark_distance) !=  (int)Math.floor((total_dist+rec.distance)/ mark_distance)) {
                 // Add a new marker
                 MarkerOptions mk = new MarkerOptions()
                         .position(new LatLng(rec.getLat(), rec.getLng()));
