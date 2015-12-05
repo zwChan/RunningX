@@ -55,7 +55,7 @@ public class MainButtonActivity extends Activity implements
     private final int MIN_DISTANCE = 5;
     private final int INTERVAL_LOCATION = 5000;
     private final int DISTANCE_SHOWTOAST = 100;
-    private final int SPEED_AVG = 3;
+    private final int SPEED_AVG = 5;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,11 +92,11 @@ public class MainButtonActivity extends Activity implements
                 if (stop) {
                     //current is stop, we will start it
                     stop = false;
-                    button_start.setText("PAUSE:" + ++count_start);
+                    button_start.setText("PAUSE" );
                     startLocationUpdates();
                 } else {
                     stop = true;
-                    button_start.setText("RESUME:" + ++count_start);
+                    button_start.setText("RESUME");
                     stopLocationUpdates();
                 }
                 Log.i(TAG, "start/pause/resume onclick..");
@@ -107,7 +107,7 @@ public class MainButtonActivity extends Activity implements
         button_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                button_map.setText("MAP:" + ++count_map);
+                button_map.setText("MAP");
                 intent.putExtra(EXTRA_MESSAGE, locations);
                 Log.i(TAG, "MAP onclick..");
                 startActivity(intent);
@@ -116,11 +116,11 @@ public class MainButtonActivity extends Activity implements
         button_stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                button_stop.setText("STOP:" + ++count_stop);
+                button_stop.setText("STOP");
                 intent.putExtra(EXTRA_MESSAGE, locations);
                 stop = true;
                 firstStart = true;
-                button_start.setText("START:" + ++count_start);
+                button_start.setText("START");
                 stopLocationUpdates();
                 Log.i(TAG, "stop onclick..");
                 startActivity(intent);
@@ -131,7 +131,7 @@ public class MainButtonActivity extends Activity implements
         button_chart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                button_chart.setText("CHART:" + ++count_chart);
+                button_chart.setText("CHART");
                 Log.i(TAG, "chart onclick..");
                 intent_chart.putExtra(EXTRA_MESSAGE, locations);
                 startActivity(intent_chart);
@@ -275,9 +275,9 @@ public class MainButtonActivity extends Activity implements
         mHandler.post(new Runnable() {
             public void run() {
                 text_speed.setText(String.format("%.2f m/s", curr_speed));
-                text_dist.setText(String.format("%.0f m, %d pt", curr_distance, locations.size()));
+                text_dist.setText(String.format("%.0f m", curr_distance));
                 if (showToast) {
-                    Toast.makeText(getApplicationContext(), "!--COME ON--!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), "!--COME ON--!", Toast.LENGTH_LONG).show();
                 }
                 Log.i(TAG, String.format("%.2f m, %.2f m/s, loc # %d", curr_distance, curr_speed, locations.size()));
             }

@@ -70,7 +70,7 @@ public class MapActivity extends Activity {
             // Add a marker for every earthquake
             int cnt = 0;
             // If already run a long way, distance between mark should be larger.
-            int mark_distance = locations.size()>200 ? MARK_DISTANCE*10: MARK_DISTANCE;
+            int mark_distance = locations.size()>100 ? MARK_DISTANCE*10: MARK_DISTANCE;
             for (GpsRec rec: locations) {
                 Log.i(TAG, rec.toString());
                 cnt++;
