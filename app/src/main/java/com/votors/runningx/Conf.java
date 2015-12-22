@@ -24,8 +24,8 @@ public class Conf {
     public static String MAP_TYPE = "Google Map";
 
     public static int MIN_DISTANCE = 5;
-    public static int INTERVAL_LOCATION = 5000;
-    public static int INTERVAL_LOCATION_FAST = 2000;
+    public static int INTERVAL_LOCATION = 5;  //second
+    public static int INTERVAL_LOCATION_FAST = 2; //second
     public static int LOCATION_ACCURACY = 30;
     public static int SPEED_AVG = 5;
 

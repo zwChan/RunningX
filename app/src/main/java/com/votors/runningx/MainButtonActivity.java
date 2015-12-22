@@ -87,6 +87,7 @@ public class MainButtonActivity extends Activity implements
 
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
+    BroadcastReceiver receiver = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -174,6 +175,8 @@ public class MainButtonActivity extends Activity implements
                         record.gpsRecs = locations;
                         record.save();
                         button_stop.setText(getResources().getString(R.string.saved));
+                    }else{
+                        Toast.makeText(getBaseContext(), "No new data to be saved.", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -270,7 +273,7 @@ public class MainButtonActivity extends Activity implements
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        BroadcastReceiver receiver = new BroadcastReceiver() {
+        receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 //mDrawerList.invalidate();
@@ -510,8 +513,8 @@ public class MainButtonActivity extends Activity implements
     }
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(Conf.INTERVAL_LOCATION);
-        mLocationRequest.setFastestInterval(Conf.INTERVAL_LOCATION_FAST);
+        mLocationRequest.setInterval(Conf.INTERVAL_LOCATION * 1000);
+        mLocationRequest.setFastestInterval(Conf.INTERVAL_LOCATION_FAST * 1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
     protected void startLocationUpdates() {
@@ -541,25 +544,26 @@ public class MainButtonActivity extends Activity implements
         }
     }
 
-    Long preLowAccuracyTime;
+    long preLowAccuracyTime;
     int lowAccuracyCnt = 0;
     void saveLocation(Location l) {
         float dist = 0, speed = 0;
         double alt=0;
         Date date = new Date();
+        if (l==null)return;
 
-        if (l.hasAccuracy() && l.getAccuracy() < Conf.LOCATION_ACCURACY) {
-            if  (date.getTime()-preLowAccuracyTime < Conf.INTERVAL_LOCATION*5) {
+        if (l.hasAccuracy() && l.getAccuracy() > Conf.LOCATION_ACCURACY) {
+            Log.i(TAG, String.format("ACCURACY too low. %f", l.getAccuracy()));
+            if  (date.getTime()-preLowAccuracyTime < Conf.INTERVAL_LOCATION * 5 * 1000) {
                 lowAccuracyCnt++;
             } else {
                 if (lowAccuracyCnt > 2) {
                     // low accuracy warning
                     mHandler.post(new Runnable() {
                         public void run() {
-                            Toast.makeText(getApplicationContext(), String.format("Gps accuracy too low, less than %dm",Conf.LOCATION_ACCURACY), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), String.format("Gps accuracy too low, less than %dm", Conf.LOCATION_ACCURACY), Toast.LENGTH_LONG).show();
                         }
                     });
-                    Log.i(TAG, String.format("ACCURACY too low. %f", l.getAccuracy()));
                 }
                 lowAccuracyCnt = 0;
                 preLowAccuracyTime = date.getTime();
@@ -630,7 +634,7 @@ public class MainButtonActivity extends Activity implements
     {
         if (backMainView()) {
             return;
-        } else if (!saved && locations.size()>0) {
+        } else if (!stop || (!saved && locations.size()>0)) {
             new AlertDialog.Builder(this)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle("")
@@ -661,6 +665,7 @@ public class MainButtonActivity extends Activity implements
     protected void onDestroy() {
         super.onDestroy();
         mGoogleApiClient.disconnect();
+        this.unregisterReceiver(receiver);
     }
 
 }

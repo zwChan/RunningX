@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp"
+    android:layout_marginTop="10dp"
     android:stretchColumns="1">
 
     <TextView
@@ -13,59 +14,109 @@
         android:text="Restarting App is recommended after changing configuration."
         android:textColor="@color/red"
         android:padding="3dip" />
+    <View
+        android:layout_height="2dip"
+        android:background="#FF909090" />
 
-    <TableRow>
+    <TableRow
+        android:layout_marginTop="3dp">
         <TextView
             android:id="@+id/LENGTH_UNIT"
             android:layout_column="0"
             android:gravity="left"
-            android:text="LENGTH UNIT"
+            android:text="Length unit"
             android:padding="3dip" />
         <Spinner
             android:id="@+id/LENGTH_UNIT_VALUE"
             android:layout_column="1"
             android:gravity="right"
+            android:background="@color/green"
             android:layout_height="wrap_content" />
     </TableRow>
 
-    <TableRow>
+    <TableRow
+        android:layout_marginTop="3dp">
         <TextView
             android:id="@+id/MAP_TYPE"
             android:gravity="left"
             android:layout_column="0"
-            android:text="MAP_TYPE"
+            android:text="Map provider"
             android:padding="3dip" />
         <Spinner
             android:id="@+id/MAP_TYPE_VALUE"
             android:layout_column="1"
+            android:background="@color/green"
             android:gravity="right"
             android:layout_height="wrap_content" />
     </TableRow>
 
     <View
         android:layout_height="2dip"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         android:background="#FF909090" />
 
-    <TableRow>
+    <TableRow
+        android:layout_marginTop="3dp">
         <TextView
             android:id="@+id/MIN_DISTANCE"
             android:layout_column="0"
             android:gravity="left"
-            android:text="MIN_DISTANCE"
+            android:text="Min distance"
             android:padding="3dip" />
         <Spinner
             android:id="@+id/MIN_DISTANCE_VALUE"
             android:layout_column="1"
+            android:background="@color/green"
+            android:gravity="right"
+            android:layout_height="wrap_content" />
+    </TableRow>
+    <TableRow
+        android:layout_marginTop="3dp">
+        <TextView
+            android:id="@+id/INTERVAL_LOCATION"
+            android:layout_column="0"
+            android:gravity="left"
+            android:text="Min Gps interval"
+            android:padding="3dip" />
+        <Spinner
+            android:id="@+id/INTERVAL_LOCATION_VALUE"
+            android:layout_column="1"
+            android:background="@color/green"
+            android:gravity="right"
+            android:layout_height="wrap_content" />
+    </TableRow>
+    <TableRow
+        android:layout_marginTop="3dp">
+        <TextView
+            android:id="@+id/LOCATION_ACCURACY"
+            android:layout_column="0"
+            android:gravity="left"
+            android:text="Min Gps accuracy"
+            android:padding="3dip" />
+        <Spinner
+            android:id="@+id/LOCATION_ACCURACY_VALUE"
+            android:layout_column="1"
+            android:background="@color/green"
+            android:gravity="right"
+            android:layout_height="wrap_content" />
+    </TableRow>
+    <TableRow
+        android:layout_marginTop="3dp">
+        <TextView
+            android:id="@+id/SPEED_AVG"
+            android:layout_column="0"
+            android:gravity="left"
+            android:text="Average speed window"
+            android:padding="3dip" />
+        <Spinner
+            android:id="@+id/SPEED_AVG_VALUE"
+            android:layout_column="1"
+            android:background="@color/green"
             android:gravity="right"
             android:layout_height="wrap_content" />
     </TableRow>
 
     <View
         android:layout_height="2dip"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         android:background="#FF909090" />
 
 </TableLayout>
