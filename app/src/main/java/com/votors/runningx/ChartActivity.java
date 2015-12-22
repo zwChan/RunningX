@@ -49,8 +49,13 @@ public class ChartActivity extends Activity{
         for (GpsRec rec: locations) {
             total_dist += rec.distance;
             xDist.add(Math.round(total_dist));
-            yPace.add(Math.round(rec.speed*10)*1.0f/10);
-            yAlt.add((int)Math.round(rec.getAlt()));
+            if (locations.indexOf(rec)>= Conf.SPEED_AVG) {
+                yPace.add(Math.round(rec.speed * 10) * 1.0f / 10);
+                yAlt.add((int) Math.round(rec.getAlt()));
+            } else {
+                yPace.add(0f);
+                yAlt.add(0);
+            }
         }
         // initialize our XYPlot reference:
         plotPace = (XYPlot) findViewById(R.id.pace);

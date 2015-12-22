@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -71,10 +72,6 @@ public class MainButtonActivity extends Activity implements
     private static final String BC_INTENT = "com.votors.runningx.BroadcastReceiver.location";
 
     private final String TAG = "Button";
-    private final int MIN_DISTANCE = 5;
-    private final int INTERVAL_LOCATION = 5000;
-    private final int DISTANCE_SHOWTOAST = 100;
-    private final int SPEED_AVG = 5;
 
     //side menu
     private DrawerLayout mDrawerLayout;
@@ -116,6 +113,7 @@ public class MainButtonActivity extends Activity implements
         button_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                buildAlertMessageNoGps();
                 last_time = System.currentTimeMillis();
                 if (firstStart) {
                     firstStart = false;
@@ -175,8 +173,7 @@ public class MainButtonActivity extends Activity implements
                         record.distance = curr_distance;
                         record.gpsRecs = locations;
                         record.save();
-                        // XXX: temperary processing
-                        //mDrawerList.invalidate();
+                        button_stop.setText(getResources().getString(R.string.saved));
                     }
                 }
 
@@ -199,21 +196,21 @@ public class MainButtonActivity extends Activity implements
         {
             @Override
             public void run() {
-                try {
-                    while(true) {
-                        sleep(1000);
-                        if (stop) continue;
-                        total_time += System.currentTimeMillis() - last_time;
-                        last_time = System.currentTimeMillis();
-                        long total_time_tmp = total_time / 1000;
-                        final String timeStr = String.format("%d:%02d:%02d", total_time_tmp / 3600, total_time_tmp % 3600 / 60, total_time_tmp % 3600 % 60);
-                        mHandler.post(new Runnable() {
-                            public void run() {
-                                text_time.setText(timeStr);
-                            }
-                        });
-                    }
-                } catch (InterruptedException e) {}
+            try {
+                while(true) {
+                    sleep(1000);
+                    if (stop) continue;
+                    total_time += System.currentTimeMillis() - last_time;
+                    last_time = System.currentTimeMillis();
+                    long total_time_tmp = total_time / 1000;
+                    final String timeStr = String.format("%d:%02d:%02d", total_time_tmp / 3600, total_time_tmp % 3600 / 60, total_time_tmp % 3600 % 60);
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            text_time.setText(timeStr);
+                        }
+                    });
+                }
+            } catch (InterruptedException e) {}
             }
         };
         thread.start();
@@ -236,16 +233,9 @@ public class MainButtonActivity extends Activity implements
         // adding nav drawer items to array
         // Home
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
-        // Find People
-//        navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
-        // Photos
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1), true, ""+Record.getRecords(this).size()));
-        // Communities, Will add a counter here
-//        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
-        // Pages
-//        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
-        // What's hot, We  will add a counter here
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
 
         // Recycle the typed array
         navMenuIcons.recycle();
@@ -291,8 +281,29 @@ public class MainButtonActivity extends Activity implements
         };
         IntentFilter filter = new IntentFilter(Record.MSG_RECORD_CHANGED);
         this.registerReceiver(receiver, filter);
-    }
 
+    }
+    private void buildAlertMessageNoGps() {
+        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+        if (manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            return;
+        }
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
     /**
      * Slide menu item click listener
      * */
@@ -374,23 +385,15 @@ public class MainButtonActivity extends Activity implements
                 mDrawerLayout.closeDrawer(mDrawerList);
                 fragment = null;
                 break;
-//            case 1:
-//                fragment = new FriendsFragment();
-//                disableEnableControls(false,button_all);
-//                break;
             case 1:
                 fragment = new TimelineFragment();
                 disableEnableControls(false,button_all);
                 break;
-//            case 3:
-//                fragment = new AnalysisFragment();
-//                disableEnableControls(false,button_all);
-//                break;
-//            case 4:
-//                fragment = new ConfFragment();
-//                disableEnableControls(false,button_all);
-//                break;
             case 2:
+                fragment = new ConfFragment();
+                disableEnableControls(false,button_all);
+                break;
+            case 3:
                 fragment = new AboutUsFragment();
                 disableEnableControls(false,button_all);
                 break;
@@ -507,8 +510,8 @@ public class MainButtonActivity extends Activity implements
     }
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(INTERVAL_LOCATION*2);
-        mLocationRequest.setFastestInterval(INTERVAL_LOCATION);
+        mLocationRequest.setInterval(Conf.INTERVAL_LOCATION);
+        mLocationRequest.setFastestInterval(Conf.INTERVAL_LOCATION_FAST);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
     protected void startLocationUpdates() {
@@ -538,15 +541,37 @@ public class MainButtonActivity extends Activity implements
         }
     }
 
+    Long preLowAccuracyTime;
+    int lowAccuracyCnt = 0;
     void saveLocation(Location l) {
         float dist = 0, speed = 0;
         double alt=0;
         Date date = new Date();
+
+        if (l.hasAccuracy() && l.getAccuracy() < Conf.LOCATION_ACCURACY) {
+            if  (date.getTime()-preLowAccuracyTime < Conf.INTERVAL_LOCATION*5) {
+                lowAccuracyCnt++;
+            } else {
+                if (lowAccuracyCnt > 2) {
+                    // low accuracy warning
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), String.format("Gps accuracy too low, less than %dm",Conf.LOCATION_ACCURACY), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    Log.i(TAG, String.format("ACCURACY too low. %f", l.getAccuracy()));
+                }
+                lowAccuracyCnt = 0;
+                preLowAccuracyTime = date.getTime();
+            }
+            return;
+        }
+
         if (locations.size() > 0) {
             GpsRec pre = locations.get(locations.size() - 1);
             dist = pre.loc.distanceTo(l);
             dist = Math.abs(dist);
-            if (dist < MIN_DISTANCE) {
+            if (dist < Conf.MIN_DISTANCE) {
                 Log.i(TAG, String.format("dist too small. %f", dist));
                 return;
             }
@@ -556,16 +581,16 @@ public class MainButtonActivity extends Activity implements
         }
 
         // speed: get the avg speed of SPEED_AVG points
-        if (locations.size()>=SPEED_AVG) {
+        if (locations.size()>=Conf.SPEED_AVG) {
             float dist_avg = dist;
             double alt_avg = alt;
-            for (int i=0; i<SPEED_AVG-1; i++) {
+            for (int i=0; i<Conf.SPEED_AVG-1; i++) {
                 dist_avg += locations.get(locations.size() - 1 - i).distance;
                 alt_avg += locations.get(locations.size() - 1 - i).getAlt();
             }
-            GpsRec preN = locations.get(locations.size() -SPEED_AVG);
+            GpsRec preN = locations.get(locations.size() -Conf.SPEED_AVG);
             speed = dist_avg / (1.0f * (date.getTime() - preN.getDate().getTime()) / 1000);
-            alt = alt_avg / (SPEED_AVG);
+            alt = alt_avg / (Conf.SPEED_AVG);
         }
 
         final GpsRec gps = new GpsRec(date, l);
@@ -581,14 +606,11 @@ public class MainButtonActivity extends Activity implements
 
 
         // Do something in the main thread about the views.
-        final Boolean showToast = (int)Math.floor(curr_distance/DISTANCE_SHOWTOAST) != (int)Math.floor((curr_distance-dist)/DISTANCE_SHOWTOAST);
+        //final Boolean showToast = (int)Math.floor(curr_distance/DISTANCE_SHOWTOAST) != (int)Math.floor((curr_distance-dist)/DISTANCE_SHOWTOAST);
         mHandler.post(new Runnable() {
             public void run() {
                 text_speed.setText(String.format("%.2f m/s", curr_speed));
                 text_dist.setText(String.format("%.0f m", curr_distance));
-                if (showToast) {
-                    //Toast.makeText(getApplicationContext(), "!--COME ON--!", Toast.LENGTH_LONG).show();
-                }
                 Log.i(TAG, String.format("%.2f m, %.2f m/s, loc # %d", curr_distance, curr_speed, locations.size()));
             }
         });
@@ -642,3 +664,62 @@ public class MainButtonActivity extends Activity implements
     }
 
 }
+
+// no used
+/*
+class KalmanLatLong {
+    private final float MinAccuracy = 1;
+
+    private float Q_metres_per_second;
+    private long TimeStamp_milliseconds;
+    private double lat;
+    private double lng;
+    private float variance; // P matrix.  Negative means object uninitialised.  NB: units irrelevant, as long as same units used throughout
+
+    public KalmanLatLong(float Q_metres_per_second) { this.Q_metres_per_second = Q_metres_per_second; variance = -1; }
+
+    public long get_TimeStamp() { return TimeStamp_milliseconds; }
+    public double get_lat() { return lat; }
+    public double get_lng() { return lng; }
+    public float get_accuracy() { return (float)Math.sqrt(variance); }
+
+    public void SetState(double lat, double lng, float accuracy, long TimeStamp_milliseconds) {
+        this.lat=lat; this.lng=lng; variance = accuracy * accuracy; this.TimeStamp_milliseconds=TimeStamp_milliseconds;
+    }
+
+    /// <summary>
+    /// Kalman filter processing for lattitude and longitude
+    /// </summary>
+    /// <param name="lat_measurement_degrees">new measurement of lattidude</param>
+    /// <param name="lng_measurement">new measurement of longitude</param>
+    /// <param name="accuracy">measurement of 1 standard deviation error in metres</param>
+    /// <param name="TimeStamp_milliseconds">time of measurement</param>
+    /// <returns>new state</returns>
+    public void Process(double lat_measurement, double lng_measurement, float accuracy, long TimeStamp_milliseconds) {
+        if (accuracy < MinAccuracy) accuracy = MinAccuracy;
+        if (variance < 0) {
+            // if variance < 0, object is unitialised, so initialise with current values
+            this.TimeStamp_milliseconds = TimeStamp_milliseconds;
+            lat=lat_measurement; lng = lng_measurement; variance = accuracy*accuracy;
+        } else {
+            // else apply Kalman filter methodology
+
+            long TimeInc_milliseconds = TimeStamp_milliseconds - this.TimeStamp_milliseconds;
+            if (TimeInc_milliseconds > 0) {
+                // time has moved on, so the uncertainty in the current position increases
+                variance += TimeInc_milliseconds * Q_metres_per_second * Q_metres_per_second / 1000;
+                this.TimeStamp_milliseconds = TimeStamp_milliseconds;
+                // TO DO: USE VELOCITY INFORMATION HERE TO GET A BETTER ESTIMATE OF CURRENT POSITION
+            }
+
+            // Kalman gain matrix K = Covarariance * Inverse(Covariance + MeasurementVariance)
+            // NB: because K is dimensionless, it doesn't matter that variance has different units to lat and lng
+            float K = variance / (variance + accuracy * accuracy);
+            // apply K
+            lat += K * (lat_measurement - lat);
+            lng += K * (lng_measurement - lng);
+            // new Covarariance  matrix is (IdentityMatrix - K) * Covarariance
+            variance = (1 - K) * variance;
+        }
+    }
+}*/

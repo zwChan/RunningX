@@ -3,6 +3,7 @@
     <string name="start">START</string>
     <string name="stop">STOP</string>
     <string name="save">SAVE</string>
+    <string name="saved">SAVED</string>
     <string name="chart">CHART</string>
     <string name="pause">PAUSE</string>
     <string name="resume">RESUME</string>
@@ -22,8 +23,8 @@
         <!-- <item >Friends</item> -->
         <item >History records</item>
         <!--<item >Analysis</item>-->
-        <!--<item >Configuration</item>-->
-        <item >About us</item>
+        <item >Configuration</item>
+        <item >About RunHelper</item>
     </string-array>
     
     <!-- Nav Drawer List Item Icons -->
@@ -33,7 +34,7 @@
         <!--<item>@drawable/ic_people</item>-->
         <item>@drawable/ic_history</item>
         <!--<item>@drawable/ic_communities</item>-->
-        <!--<item>@drawable/ic_pages</item>-->
+        <item>@drawable/ic_conf</item>
         <item>@drawable/ic_aboutus</item>
     </array>
 
@@ -43,4 +44,20 @@
 
     <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>
+
+    <string-array name="LENGTH_UNIT_LIST">
+        <item>International</item>
+        <item>United States</item>
+    </string-array>
+    <string-array name="MAP_TYPE_LIST">
+        <item>Google map</item>
+    </string-array>
+    <string-array name="MIN_DISTANCE_LIST">
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>30</item>
+    </string-array>
+
+
 </resources>

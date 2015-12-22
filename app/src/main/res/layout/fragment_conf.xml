@@ -1,22 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    
-    <TextView
-        android:id="@+id/txtLabel"
-         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textSize="16dp"
-        android:text="Pages View"/>
-    
-    <ImageView android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/txtLabel"
-        android:src="@drawable/ic_pages"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"/>
-    
+    android:layout_height="match_parent"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:stretchColumns="1">
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/conf_changed_warning"
+        android:layout_column="0"
+        android:gravity="left"
+        android:text="Restarting App is recommended after changing configuration."
+        android:textColor="@color/red"
+        android:padding="3dip" />
+
+    <TableRow>
+        <TextView
+            android:id="@+id/LENGTH_UNIT"
+            android:layout_column="0"
+            android:gravity="left"
+            android:text="LENGTH UNIT"
+            android:padding="3dip" />
+        <Spinner
+            android:id="@+id/LENGTH_UNIT_VALUE"
+            android:layout_column="1"
+            android:gravity="right"
+            android:layout_height="wrap_content" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:id="@+id/MAP_TYPE"
+            android:gravity="left"
+            android:layout_column="0"
+            android:text="MAP_TYPE"
+            android:padding="3dip" />
+        <Spinner
+            android:id="@+id/MAP_TYPE_VALUE"
+            android:layout_column="1"
+            android:gravity="right"
+            android:layout_height="wrap_content" />
+    </TableRow>
+
+    <View
+        android:layout_height="2dip"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="#FF909090" />
+
+    <TableRow>
+        <TextView
+            android:id="@+id/MIN_DISTANCE"
+            android:layout_column="0"
+            android:gravity="left"
+            android:text="MIN_DISTANCE"
+            android:padding="3dip" />
+        <Spinner
+            android:id="@+id/MIN_DISTANCE_VALUE"
+            android:layout_column="1"
+            android:gravity="right"
+            android:layout_height="wrap_content" />
+    </TableRow>
+
+    <View
+        android:layout_height="2dip"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="#FF909090" />
+
+</TableLayout>
