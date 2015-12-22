@@ -1,100 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/button_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#aaeeaa"
-        android:gravity="center_horizontal"
-        android:text="@string/time"
-        android:layout_marginLeft="100dip"
-        android:layout_marginTop="10dip"
-        android:layout_marginRight="100dip"
-        android:textSize="24sp" />
-    <TextView
-        android:id="@+id/button_distance"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#00aa00"
-        android:layout_below="@id/button_time"
-        android:gravity="center_horizontal"
-        android:text="@string/distance"
-        android:layout_marginLeft="100dip"
-        android:layout_marginTop="10dip"
-        android:layout_marginRight="100dip"
-        android:textSize="24sp" />
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <!-- TextView with layout weight of 1 out of 4 -->
+    <!-- Framelayout to display Fragments -->
+    <FrameLayout
+        android:id="@+id/frame_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/button_speed"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#00aa00"
-        android:gravity="center_horizontal"
-        android:layout_below="@id/button_distance"
-        android:text="@string/speed"
-        android:layout_marginLeft="100dip"
-        android:layout_marginTop="10dip"
-        android:layout_marginRight="100dip"
-        android:textSize="24sp" />
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/button_all"
+            android:layout_width="match_parent" android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/button_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#aaeeaa"
+                android:gravity="center_horizontal"
+                android:text="@string/time"
+                android:layout_marginLeft="100dip"
+                android:layout_marginTop="10dip"
+                android:layout_marginRight="100dip"
+                android:textSize="24sp" />
+            <TextView
+                android:id="@+id/button_distance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00aa00"
+                android:layout_below="@id/button_time"
+                android:gravity="center_horizontal"
+                android:text="@string/distance"
+                android:layout_marginLeft="100dip"
+                android:layout_marginTop="10dip"
+                android:layout_marginRight="100dip"
+                android:textSize="24sp" />
 
-    <Button
-        android:id="@+id/button_start"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/button_speed"
-        android:layout_marginLeft="50dip"
-        android:layout_marginTop="30dip"
-        android:layout_marginRight="50dip"
-        android:background="@color/green"
-        android:text="@string/start" >
-    </Button>
+            <!-- TextView with layout weight of 1 out of 4 -->
 
-    <Button
-        android:id="@+id/button_map"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/red"
-        android:layout_marginLeft="50dip"
-        android:layout_marginRight="50dip"
-        android:layout_marginTop="10dip"
-        android:text="@string/map"
-        android:layout_below="@+id/button_start"
-        android:layout_alignParentStart="true">
-    </Button>
-    <Button
-        android:id="@+id/button_stop"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/red"
-        android:layout_marginLeft="50dip"
-        android:layout_marginRight="50dip"
-        android:layout_marginTop="10dip"
-        android:text="@string/stop"
-        android:layout_below="@+id/button_map"
-        android:layout_alignParentStart="true">
-    </Button>
-    <Button
-        android:id="@+id/button_chart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/button_stop"
-        android:layout_marginLeft="50dip"
-        android:layout_marginRight="50dip"
-        android:layout_marginTop="10dip"
+            <TextView
+                android:id="@+id/button_speed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00aa00"
+                android:gravity="center_horizontal"
+                android:layout_below="@id/button_distance"
+                android:text="@string/speed"
+                android:layout_marginLeft="100dip"
+                android:layout_marginTop="10dip"
+                android:layout_marginRight="100dip"
+                android:textSize="24sp" />
 
-        android:textColor="@color/blue"
-        android:text="@string/chart" >
-    </Button>
+            <Button
+                android:id="@+id/button_start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/button_speed"
+                android:layout_marginLeft="50dip"
+                android:layout_marginTop="30dip"
+                android:layout_marginRight="50dip"
+                android:background="@color/green"
+                android:text="@string/start" >
+            </Button>
 
-    <TableRow
-        android:layout_width="match_parent"
+            <Button
+                android:id="@+id/button_map"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/red"
+                android:layout_marginLeft="50dip"
+                android:layout_marginRight="50dip"
+                android:layout_marginTop="10dip"
+                android:text="@string/map"
+                android:layout_below="@+id/button_start"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
+            </Button>
+            <Button
+                android:id="@+id/button_stop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/red"
+                android:layout_marginLeft="50dip"
+                android:layout_marginRight="50dip"
+                android:layout_marginTop="10dip"
+                android:text="@string/stop"
+                android:layout_below="@+id/button_map"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
+            </Button>
+            <Button
+                android:id="@+id/button_chart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/button_stop"
+                android:layout_marginLeft="50dip"
+                android:layout_marginRight="50dip"
+                android:layout_marginTop="10dip"
+
+                android:textColor="@color/blue"
+                android:text="@string/chart" >
+            </Button>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_alignLeft="@+id/button_start"
+                android:layout_alignStart="@+id/button_start">
+
+            </TableRow>
+
+        </RelativeLayout>
+    </FrameLayout>
+
+
+    <!-- Listview to display slider menu -->
+    <ListView
+        android:id="@+id/list_slidermenu"
+        android:layout_width="240dp"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/button_start"></TableRow>
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:divider="@color/list_divider"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/list_selector"
+        android:background="@color/list_background"/>
 
-</RelativeLayout>
+</android.support.v4.widget.DrawerLayout>

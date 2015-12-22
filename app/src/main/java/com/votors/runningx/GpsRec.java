@@ -14,10 +14,11 @@ public class GpsRec implements Serializable {
     public double lat, lng, alt;
     public float distance;
     public float speed;
-    private Date date;
+    public Date date;
     transient public Location loc;  // only for computing
     public static final String TAG = "GpsRec";
 
+    protected GpsRec(){}
     protected GpsRec(Date date, Location l) {
         super();
         this.lat = l.getLatitude();

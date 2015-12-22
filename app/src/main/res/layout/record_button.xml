@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <Spinner
+        android:id="@+id/button_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dip"
+        android:layout_marginTop="10dip"
+        />
+    <Button
+        android:id="@+id/button_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_toLeftOf="@id/button_spinner"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        android:layout_marginTop="10dip"
+
+        android:textColor="@color/red"
+        android:text="@string/delete" >
+    </Button>
+
+
+    <TextView
+        android:id="@+id/button_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#aaeeaa"
+        android:gravity="center_horizontal"
+        android:text="@string/time"
+        android:layout_marginLeft="100dip"
+        android:layout_marginTop="30dip"
+        android:layout_below="@id/button_spinner"
+        android:layout_marginRight="100dip"
+        android:textSize="24sp" />
+    <TextView
+        android:id="@+id/button_distance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00aa00"
+        android:layout_below="@id/button_time"
+        android:gravity="center_horizontal"
+        android:text="@string/distance"
+        android:layout_marginLeft="100dip"
+        android:layout_marginTop="10dip"
+        android:layout_marginRight="100dip"
+        android:textSize="24sp" />
+
+    <!-- TextView with layout weight of 1 out of 4 -->
+
+    <TextView
+        android:id="@+id/button_speed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00aa00"
+        android:gravity="center_horizontal"
+        android:layout_below="@id/button_distance"
+        android:text="@string/speed"
+        android:layout_marginLeft="100dip"
+        android:layout_marginTop="10dip"
+        android:layout_marginRight="100dip"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/button_map"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red"
+        android:layout_marginLeft="50dip"
+        android:layout_marginRight="50dip"
+        android:layout_marginTop="10dip"
+        android:text="@string/map"
+        android:layout_below="@+id/button_speed"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+    </Button>
+    <Button
+        android:id="@+id/button_chart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/button_map"
+        android:layout_marginLeft="50dip"
+        android:layout_marginRight="50dip"
+        android:layout_marginTop="10dip"
+
+        android:textColor="@color/blue"
+        android:text="@string/chart" >
+    </Button>
+
+</RelativeLayout>

@@ -16,3 +16,6 @@ Now it has 4 functions:
 
 
 ## Have a funny running!
+
+## Google play
+[Google play store, https://play.google.com/store/apps/details?id=com.votors.runningx](https://play.google.com/store/apps/details?id=com.votors.runningx)
