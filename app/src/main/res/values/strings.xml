@@ -47,18 +47,23 @@
 
     <string-array name="LENGTH_UNIT_LIST">
         <item>International</item>
-        <item>United States</item>
+        <!--<item>United States</item>-->
     </string-array>
     <string-array name="MAP_TYPE_LIST">
         <item>Google map</item>
     </string-array>
     <string-array name="MIN_DISTANCE_LIST">
+        <item>1</item>
+        <item>3</item>
+        <item>5</item>
         <item>10</item>
         <item>15</item>
         <item>20</item>
         <item>30</item>
     </string-array>
     <string-array name="INTERVAL_LOCATION_LIST">
+        <item>1</item>
+        <item>2</item>
         <item>3</item>
         <item>5</item>
         <item>10</item>
