@@ -10,14 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 public class ConfFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     Context context = null;
@@ -29,14 +23,18 @@ public class ConfFragment extends Fragment implements AdapterView.OnItemSelected
     TextView text_minGpsInterval = null;
     TextView text_minAccuracy = null;
     TextView text_speedAvg = null;
+    TextView text_accFactor = null;
+    TextView text_gspOnly = null;
     Spinner spinner_lengthUnit;
     Spinner spinner_mapType;
     Spinner spinner_minDistance;
     Spinner spinner_minGpsInterval;
     Spinner spinner_minAccuracy;
     Spinner spinner_speedAvg;
+    Spinner spinner_accFactor;
+    Spinner spinner_gpsOnly;
 
-    public final static String EXTRA_MESSAGE = "com.votors.Conf.MESSAGE";
+    public final static String CONF_MESSAGE = "com.votors.Conf.MESSAGE";
     private final String TAG = "ConfFragment";
 
 
@@ -113,12 +111,33 @@ public class ConfFragment extends Fragment implements AdapterView.OnItemSelected
         pos = adapter_spendAvg.getPosition(String.valueOf(Conf.SPEED_AVG));
         if (pos>=0)spinner_speedAvg.setSelection(pos);
 
+        text_gspOnly = (TextView) rootView.findViewById(R.id.GPS_ONLY);
+        spinner_gpsOnly = (Spinner) rootView.findViewById(R.id.GPS_ONLY_VALUE);
+        spinner_gpsOnly.setOnItemSelectedListener(this);
+        ArrayAdapter<CharSequence> adapter_gpsOnly = ArrayAdapter.createFromResource(context,
+                R.array.GPS_ONLY_LIST, android.R.layout.simple_spinner_item);
+        adapter_gpsOnly.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_gpsOnly.setAdapter(adapter_gpsOnly);
+        pos = adapter_gpsOnly.getPosition(String.valueOf(Conf.GPS_ONLY));
+        if (pos>=0)spinner_gpsOnly.setSelection(pos);
+
+        text_accFactor = (TextView) rootView.findViewById(R.id.ACCELERATE_FACTOR);
+        spinner_accFactor = (Spinner) rootView.findViewById(R.id.ACCELERATE_FACTOR_VALUE);
+        spinner_accFactor.setOnItemSelectedListener(this);
+        ArrayAdapter<CharSequence> adapter_accFactor = ArrayAdapter.createFromResource(context,
+                R.array.ACCELERATE_FACTOR_LIST, android.R.layout.simple_spinner_item);
+        adapter_accFactor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_accFactor.setAdapter(adapter_accFactor);
+        pos = adapter_accFactor.getPosition(String.valueOf(Conf.ACCELERATE_FACTOR));
+        if (pos>=0)spinner_accFactor.setSelection(pos);
+
 
         return rootView;
     }
 
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         // An item was selected. You can retrieve the selected item using
+        boolean changed = false;
         switch (parent.getId())
         {
             case R.id.LENGTH_UNIT_VALUE:
@@ -126,6 +145,7 @@ public class ConfFragment extends Fragment implements AdapterView.OnItemSelected
                     text_warn.setVisibility(View.VISIBLE);
                     Conf.LENGTH_UNIT = (String) parent.getItemAtPosition(pos);
                     Log.i(TAG, "length unit changed." + Conf.LENGTH_UNIT);
+                    changed = true;
                 }
                 break;
             case R.id.MAP_TYPE_VALUE:
@@ -133,6 +153,7 @@ public class ConfFragment extends Fragment implements AdapterView.OnItemSelected
                     Conf.MAP_TYPE = (String) parent.getItemAtPosition(pos);
                     Log.i(TAG, "map type changed." + Conf.MAP_TYPE);
                     text_warn.setVisibility(View.VISIBLE);
+                    changed = true;
                 }
                 break;
             case R.id.MIN_DISTANCE_VALUE:
@@ -140,31 +161,56 @@ public class ConfFragment extends Fragment implements AdapterView.OnItemSelected
                     Conf.MIN_DISTANCE = Integer.parseInt((String) parent.getItemAtPosition(pos));
                     Log.i(TAG, "min distance changed." + Conf.MIN_DISTANCE);
                     text_warn.setVisibility(View.VISIBLE);
+                    changed = true;
                 }
                 break;
             case R.id.INTERVAL_LOCATION_VALUE:
                 if (!String.valueOf(Conf.INTERVAL_LOCATION).equals(parent.getItemAtPosition(pos))) {
                     Conf.INTERVAL_LOCATION = Integer.parseInt((String) parent.getItemAtPosition(pos));
-                    Log.i(TAG, "min distance changed." + Conf.INTERVAL_LOCATION);
+                    Log.i(TAG, "min INTERVAL changed." + Conf.INTERVAL_LOCATION);
                     text_warn.setVisibility(View.VISIBLE);
+                    changed = true;
                 }
                 break;
             case R.id.LOCATION_ACCURACY_VALUE:
                 if (!String.valueOf(Conf.LOCATION_ACCURACY).equals(parent.getItemAtPosition(pos))) {
                     Conf.LOCATION_ACCURACY = Integer.parseInt((String) parent.getItemAtPosition(pos));
-                    Log.i(TAG, "min distance changed." + Conf.LOCATION_ACCURACY);
+                    Log.i(TAG, "ACCURACY changed." + Conf.LOCATION_ACCURACY);
                     text_warn.setVisibility(View.VISIBLE);
+                    changed = true;
                 }
                 break;
             case R.id.SPEED_AVG_VALUE:
                 if (!String.valueOf(Conf.SPEED_AVG).equals(parent.getItemAtPosition(pos))) {
                     Conf.SPEED_AVG = Integer.parseInt((String) parent.getItemAtPosition(pos));
-                    Log.i(TAG, "min distance changed." + Conf.SPEED_AVG);
+                    Log.i(TAG, "SPEED AVG changed." + Conf.SPEED_AVG);
                     text_warn.setVisibility(View.VISIBLE);
+                    changed = true;
+                }
+                break;
+            case R.id.GPS_ONLY_VALUE:
+                if (0 != String.valueOf(Conf.GPS_ONLY).compareToIgnoreCase((String)parent.getItemAtPosition(pos))) {
+                    Conf.GPS_ONLY = Boolean.parseBoolean((String) parent.getItemAtPosition(pos));
+                    Log.i(TAG, "GPS ONLY changed." + Conf.GPS_ONLY);
+                    text_warn.setVisibility(View.VISIBLE);
+                    changed = true;
+                }
+                break;
+            case R.id.ACCELERATE_FACTOR_VALUE:
+                if (0 != String.valueOf(Conf.ACCELERATE_FACTOR).compareToIgnoreCase((String)parent.getItemAtPosition(pos))) {
+                    Conf.ACCELERATE_FACTOR = Float.parseFloat((String) parent.getItemAtPosition(pos));
+                    Log.i(TAG, "ACC FACTOR changed." + Conf.ACCELERATE_FACTOR);
+                    text_warn.setVisibility(View.VISIBLE);
+                    changed = true;
                 }
                 break;
             default:
                 Log.i(TAG, "spinner view not found. ." + view.getId());
+        }
+        if (changed) {
+            //broadcast a message
+            Intent msg = new Intent(CONF_MESSAGE);
+            context.sendOrderedBroadcast(msg, null);
         }
         Conf.save(context);
 

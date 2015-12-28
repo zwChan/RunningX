@@ -114,7 +114,36 @@
             android:gravity="right"
             android:layout_height="wrap_content" />
     </TableRow>
-
+    <TableRow
+        android:layout_marginTop="3dp">
+        <TextView
+            android:id="@+id/GPS_ONLY"
+            android:layout_column="0"
+            android:gravity="left"
+            android:text="Used GPS only"
+            android:padding="3dip" />
+        <Spinner
+            android:id="@+id/GPS_ONLY_VALUE"
+            android:layout_column="1"
+            android:background="@color/green"
+            android:gravity="right"
+            android:layout_height="wrap_content" />
+    </TableRow>
+    <TableRow
+        android:layout_marginTop="3dp">
+        <TextView
+            android:id="@+id/ACCELERATE_FACTOR"
+            android:layout_column="0"
+            android:gravity="left"
+            android:text="Acceleration factor"
+            android:padding="3dip" />
+        <Spinner
+            android:id="@+id/ACCELERATE_FACTOR_VALUE"
+            android:layout_column="1"
+            android:background="@color/green"
+            android:gravity="right"
+            android:layout_height="wrap_content" />
+    </TableRow>
     <View
         android:layout_height="2dip"
         android:background="#FF909090" />

@@ -117,14 +117,14 @@ public class MapActivity extends Activity {
 
     // hue: [0,360)
     private float getMarkerColor(float speed) {
-
+        float hue = 0f;
         if (speed < 1) {
-            speed = 1;
-        } else if (speed > 9.9) {
-            speed = 9.9F;
+            hue = 1;
+        } else if (speed > 9) {
+            hue = 9;
         }
 
-        return (36 * speed);
+        return (36 * hue);
     }
 
     public class LocationReceiver extends BroadcastReceiver {

@@ -86,7 +86,9 @@ public class ChartActivity extends Activity{
         plotPace.setTicksPerRangeLabel(3);
         plotAlt.setTicksPerRangeLabel(3);
         plotPace.getGraphWidget().setDomainLabelOrientation(-45);
+        plotPace.getGraphWidget().setRangeLabelOrientation(-90);
         plotAlt.getGraphWidget().setDomainLabelOrientation(-45);
+        plotAlt.getGraphWidget().setRangeLabelOrientation(-90);
     }
 
 }

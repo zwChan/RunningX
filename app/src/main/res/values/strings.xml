@@ -53,6 +53,7 @@
         <item>Google map</item>
     </string-array>
     <string-array name="MIN_DISTANCE_LIST">
+        <item>0</item>
         <item>1</item>
         <item>3</item>
         <item>5</item>
@@ -83,5 +84,15 @@
         <item>10</item>
         <item>15</item>
         <item>30</item>
+    </string-array>
+    <string-array name="GPS_ONLY_LIST">
+        <item>True</item>
+        <!--<item>False</item>-->
+    </string-array>
+    <string-array name="ACCELERATE_FACTOR_LIST">
+        <item>0</item>
+        <item>0.2</item>
+        <item>0.5</item>
+        <item>1.0</item>
     </string-array>
 </resources>
