@@ -1,6 +1,8 @@
 package com.votors.runningx;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Environment;
 import android.util.JsonReader;
 import android.util.JsonWriter;
 import android.util.Log;
@@ -18,6 +20,7 @@ public class Conf {
 
     public static String LENGTH_UNIT = "International unit";
     public static String MAP_TYPE = "Google Map";
+    public static String SPEED_TYPE = "Pace";
 
     public static int MIN_DISTANCE = 3;
     public static int INTERVAL_LOCATION = 5;  //second
@@ -30,14 +33,12 @@ public class Conf {
     public static String TAG = "Conf";
 
     static boolean existConfFile(Context context) {
-        File dir = context.getDir(".", 0);
-        String filename = String.format(dir.getAbsolutePath() + "/conf.json");
+        String filename = String.format(getRootDir(context) + "/conf.json");
         return new File(filename).exists();
     }
 
     static public void  save(Context context) {
-        File dir = context.getDir(".", 0);
-        String filename = String.format(dir.getAbsolutePath() + "/conf.json");
+        String filename = String.format(getRootDir(context) + "/conf.json");
         try {
             FileOutputStream fout = new FileOutputStream(filename);
             JsonWriter writer = new JsonWriter(new OutputStreamWriter(fout, "UTF-8"));
@@ -47,6 +48,7 @@ public class Conf {
             // write common information
             writer.name("LENGTH_UNIT").value(LENGTH_UNIT);
             writer.name("MAP_TYPE").value(MAP_TYPE);
+            writer.name("SPEED_TYPE").value(SPEED_TYPE);
             writer.name("MIN_DISTANCE").value(MIN_DISTANCE);
             writer.name("INTERVAL_LOCATION").value(INTERVAL_LOCATION);
             writer.name("INTERVAL_LOCATION_FAST").value(INTERVAL_LOCATION_FAST);
@@ -64,8 +66,7 @@ public class Conf {
     }
 
     static public void read(Context context) {
-        File dir = context.getDir(".", 0);
-        String filename = String.format(dir.getAbsolutePath() + "/conf.json");
+        String filename = String.format(getRootDir(context) + "/conf.json");
         try {
             FileInputStream fin = new FileInputStream(filename);
             JsonReader reader = new JsonReader(new InputStreamReader(fin, "UTF-8"));
@@ -79,6 +80,8 @@ public class Conf {
                     LENGTH_UNIT = reader.nextString();
                 } else if (name.equals("MAP_TYPE")) {
                     MAP_TYPE = reader.nextString();
+                } else if (name.equals("SPEED_TYPE")) {
+                    SPEED_TYPE = reader.nextString();
                 } else if (name.equals("MIN_DISTANCE")) {
                     MIN_DISTANCE = reader.nextInt();
                 } else if (name.equals("INTERVAL_LOCATION")) {
@@ -106,4 +109,98 @@ public class Conf {
         }
     }
 
+    public static String getDistanceUnit(Context context) {
+        if (LENGTH_UNIT.equals(context.getResources().getString(R.string.international))) {
+            return "Km";
+        }else{
+            return "Mile";
+        }
+    }
+    public static String getAltitudeUnit(Context context) {
+        if (LENGTH_UNIT.equals(context.getResources().getString(R.string.international))) {
+            return "m";
+        }else{
+            return "feet";
+        }
+    }
+    public static String getSpeedUnit(Context context) {
+        if (LENGTH_UNIT.equals(context.getResources().getString(R.string.international))) {
+            if (SPEED_TYPE.equals(context.getResources().getString(R.string.pace))) {
+                return "Min/Km";
+            }else{
+                return "Km/H";
+            }
+        }else{
+            if (SPEED_TYPE.equals(context.getResources().getString(R.string.pace))) {
+                return "Min/Mi";
+            }else{
+                return "Mi/H";
+            }
+        }
+    }
+
+    public static float getDistance(Context context, float distance) {
+        if (LENGTH_UNIT.equals(context.getResources().getString(R.string.international))) {
+            return distance/1000f;
+        }else{
+            return distance/1609.34f;
+        }
+    }
+    // feet or m
+    public static float getAltitude(Context context, float alt) {
+        if (LENGTH_UNIT.equals(context.getResources().getString(R.string.international))) {
+            return alt;
+        }else{
+            return alt * 3.28084f;
+        }
+    }
+    public static float getSpeed(Context context, float speed) {
+        if (speed < 0.000001) return 0;
+        if (LENGTH_UNIT.equals(context.getResources().getString(R.string.international))) {
+            if (SPEED_TYPE.equals(context.getResources().getString(R.string.pace))) {
+                return 1000/(60*speed);
+            }else{
+                return (speed/1000)*3600;
+            }
+        }else{
+            if (SPEED_TYPE.equals(context.getResources().getString(R.string.pace))) {
+                return 1609.34f/(60*speed);
+            }else{
+                return (speed/1609.34f)*3600;
+            }
+        }
+    }
+
+    public static String getSpeedString(Context context,float speed) {
+        float sp = getSpeed(context,speed);
+        if (SPEED_TYPE.equals(context.getResources().getString(R.string.pace))) {
+            return String.format("%02d:%02d", (int)Math.floor(sp), Math.round(60 * (sp - Math.floor(sp))));
+        } else {
+            return String.format("%.02f", sp);
+        }
+    }
+
+    public static Intent getMapIntent(Context context) {
+        if (MAP_TYPE.equals(context.getResources().getString(R.string.gmap))) {
+            return new Intent(context, MapActivity.class);
+        } else {
+           return new Intent(context, MapActivity_gd.class);
+        }
+    }
+
+    public static String getRootDir(Context context) {
+        File dir = Environment.getExternalStorageDirectory();
+        String rootDir = null;
+        if (dir == null) {
+            dir = context.getDir(".", 0);
+            rootDir = dir.getAbsolutePath();
+        } else {
+            rootDir = dir.getAbsolutePath() +"/"+ context.getResources().getString(R.string.app_name);
+        }
+        dir = new File(rootDir);
+        if (dir.mkdir()) {
+            new File(rootDir+"/records").mkdir();
+        }
+        return rootDir;
+    }
 }

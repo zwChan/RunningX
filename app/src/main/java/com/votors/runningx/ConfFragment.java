@@ -19,6 +19,7 @@ public class ConfFragment extends Fragment implements AdapterView.OnItemSelected
     TextView text_warn = null;
     TextView text_lengthUnit = null;
     TextView text_mapType = null;
+    TextView text_speedType = null;
     TextView text_minDistance = null;
     TextView text_minGpsInterval = null;
     TextView text_minAccuracy = null;
@@ -27,6 +28,7 @@ public class ConfFragment extends Fragment implements AdapterView.OnItemSelected
     TextView text_gspOnly = null;
     Spinner spinner_lengthUnit;
     Spinner spinner_mapType;
+    Spinner spinner_speedType;
     Spinner spinner_minDistance;
     Spinner spinner_minGpsInterval;
     Spinner spinner_minAccuracy;
@@ -68,8 +70,18 @@ public class ConfFragment extends Fragment implements AdapterView.OnItemSelected
                 R.array.MAP_TYPE_LIST, android.R.layout.simple_spinner_item);
         adapter_mapType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_mapType.setAdapter(adapter_mapType);
-        pos = adapter_mapType.getPosition(Conf.LENGTH_UNIT);
+        pos = adapter_mapType.getPosition(Conf.MAP_TYPE);
         if (pos>=0)spinner_mapType.setSelection(pos);
+
+        text_speedType = (TextView) rootView.findViewById(R.id.SPEED_TYPE);
+        spinner_speedType = (Spinner) rootView.findViewById(R.id.SPEED_TYPE_VALUE);
+        spinner_speedType.setOnItemSelectedListener(this);
+        ArrayAdapter<CharSequence> adapter_speedType = ArrayAdapter.createFromResource(context,
+                R.array.SPEED_TYPE_LIST, android.R.layout.simple_spinner_item);
+        adapter_speedType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_speedType.setAdapter(adapter_speedType);
+        pos = adapter_speedType.getPosition(Conf.SPEED_TYPE);
+        if (pos>=0)spinner_speedType.setSelection(pos);
 
         text_minDistance = (TextView) rootView.findViewById(R.id.MIN_DISTANCE);
         spinner_minDistance = (Spinner) rootView.findViewById(R.id.MIN_DISTANCE_VALUE);
@@ -152,6 +164,14 @@ public class ConfFragment extends Fragment implements AdapterView.OnItemSelected
                 if (!Conf.MAP_TYPE.equals(parent.getItemAtPosition(pos))) {
                     Conf.MAP_TYPE = (String) parent.getItemAtPosition(pos);
                     Log.i(TAG, "map type changed." + Conf.MAP_TYPE);
+                    text_warn.setVisibility(View.VISIBLE);
+                    changed = true;
+                }
+                break;
+            case R.id.SPEED_TYPE_VALUE:
+                if (!Conf.SPEED_TYPE.equals(parent.getItemAtPosition(pos))) {
+                    Conf.SPEED_TYPE = (String) parent.getItemAtPosition(pos);
+                    Log.i(TAG, "speed type changed." + Conf.SPEED_TYPE);
                     text_warn.setVisibility(View.VISIBLE);
                     changed = true;
                 }

@@ -42,16 +42,17 @@ public class ChartActivity extends Activity{
                 WindowManager.LayoutParams.FLAG_SECURE);*/
         setContentView(R.layout.main_chart);
         locations = (ArrayList<GpsRec>)getIntent().getSerializableExtra(EXTRA_MESSAGE);
-        ArrayList<Integer> xDist = new ArrayList<>();
+        ArrayList<Float> xDist = new ArrayList<>();
         ArrayList<Float> yPace = new ArrayList<>();
         ArrayList<Integer> yAlt = new ArrayList<>();
 
         for (GpsRec rec: locations) {
             total_dist += rec.distance;
-            xDist.add(Math.round(total_dist));
+            //xDist.add(Math.round(Conf.getDistance(getApplicationContext(), total_dist)));
+            xDist.add((Conf.getDistance(getApplicationContext(), total_dist)));
             if (locations.indexOf(rec)>= Conf.SPEED_AVG) {
-                yPace.add(Math.round(rec.speed * 10) * 1.0f / 10);
-                yAlt.add((int) Math.round(rec.getAlt()));
+                yPace.add(Conf.getSpeed(getApplicationContext(),rec.speed));
+                yAlt.add(Math.round(Conf.getAltitude(getApplicationContext(), (float)rec.getAlt())));
             } else {
                 yPace.add(0f);
                 yAlt.add(0);
@@ -59,7 +60,13 @@ public class ChartActivity extends Activity{
         }
         // initialize our XYPlot reference:
         plotPace = (XYPlot) findViewById(R.id.pace);
+        plotPace.setTitle(Conf.SPEED_TYPE);
+        plotPace.setRangeLabel(Conf.getSpeedUnit(getApplicationContext()));
+        plotPace.setDomainLabel(Conf.getDistanceUnit(getApplicationContext()));
+
         plotAlt = (XYPlot) findViewById(R.id.altitude);
+        plotAlt.setRangeLabel(Conf.getAltitudeUnit(getApplicationContext()));
+        plotAlt.setDomainLabel(Conf.getDistanceUnit(getApplicationContext()));
 
         // Turn the above arrays into XYSeries':
         XYSeries series1 = new SimpleXYSeries(

@@ -83,12 +83,12 @@ public class TimelineFragment extends Fragment implements AdapterView.OnItemSele
             }
         });
 
-        final Intent intent = new Intent(context, MapActivity.class);
         button_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (locations != null) {
                     button_map.setText(getResources().getString(R.string.map));
+                    Intent intent = Conf.getMapIntent(context);
                     intent.putExtra(EXTRA_MESSAGE, locations);
                     Log.i(TAG, "MAP onclick..");
                     startActivity(intent);
@@ -99,13 +99,13 @@ public class TimelineFragment extends Fragment implements AdapterView.OnItemSele
             }
         });
 
-        final Intent intent_chart = new Intent(context, ChartActivity.class);
         button_chart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (locations != null) {
                     button_chart.setText(getResources().getString(R.string.chart));
                     Log.i(TAG, "chart onclick..");
+                    final Intent intent_chart = new Intent(context, ChartActivity.class);
                     intent_chart.putExtra(EXTRA_MESSAGE, locations);
                     startActivity(intent_chart);
                 }else{
@@ -147,8 +147,9 @@ public class TimelineFragment extends Fragment implements AdapterView.OnItemSele
             locations = record.gpsRecs;
             final String timeStr = String.format("%d:%02d:%02d", record.usedTime / 3600, record.usedTime % 3600 / 60, record.usedTime % 3600 % 60);
             text_time.setText(timeStr);
-            text_speed.setText(String.format("%.2f m/s", record.distance/record.usedTime));
-            text_dist.setText(String.format("%.0f m", record.distance));
+            text_speed.setText(String.format("%s %s", Conf.getSpeedString(context, record.distance/record.usedTime), Conf.getSpeedUnit(context)));
+            text_dist.setText(String.format("%.2f %s", Conf.getDistance(context,record.distance), Conf.getDistanceUnit(context)));
+
         } else {
             locations = null;
         }

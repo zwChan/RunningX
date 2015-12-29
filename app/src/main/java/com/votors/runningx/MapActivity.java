@@ -82,8 +82,12 @@ public class MapActivity extends Activity {
                     // Set the title of the Marker's information window
                     if (cnt==1) {
                         mk.title(String.valueOf("start"));
-                    }else{
-                        mk.title(String.format("%.0fm,%.1fm/s", Math.floor(total_dist + rec.distance), rec.speed));
+                    } else {
+                        mk.title(String.format("%.2f%s,%.1f%s",
+                                Conf.getDistance(getApplicationContext(), (float) (total_dist + rec.distance)),
+                                Conf.getDistanceUnit(getApplicationContext()),
+                                Conf.getSpeed(getApplicationContext(), rec.speed),
+                                Conf.getSpeedUnit(getApplicationContext())));
                     }
 
                     // Set the color for the Marker
@@ -151,7 +155,13 @@ public class MapActivity extends Activity {
                         .position(new LatLng(rec.getLat(), rec.getLng()));
 
                 // Set the title of the Marker's information window
-                mk.title(String.format("%.0fm,%.1fm/s",Math.floor(total_dist + rec.distance),rec.speed));
+                //mk.title(String.format("%.0fm,%.1fm/s",Math.floor(total_dist + rec.distance),rec.speed));
+                mk.title(String.format("%.2f%s,%.1f%s",
+                        Conf.getDistance(getApplicationContext(),(float)(total_dist + rec.distance)),
+                        Conf.getDistanceUnit(getApplicationContext()),
+                        Conf.getSpeed(getApplicationContext(),rec.speed),
+                        Conf.getSpeedUnit(getApplicationContext())));
+
                 // Set the color for the Marker
                 mk.icon(BitmapDescriptorFactory.defaultMarker(getMarkerColor(rec.speed)));
                 mMap.addMarker(mk);
