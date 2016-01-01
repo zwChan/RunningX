@@ -29,10 +29,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.votors.runningx.adapter.NavDrawerListAdapter;
 import com.votors.runningx.model.NavDrawerItem;
 
@@ -45,8 +41,7 @@ import cn.sharesdk.onekeyshare.OnekeyShare;
 /**
  * Created by Jason on 2015/11/27 0027.
  */
-public class MainButtonActivity extends Activity implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, android.location.LocationListener {
+public class MainButtonActivity extends Activity implements android.location.LocationListener {
     Boolean stop = true;
     Boolean saved = true;
     Boolean firstStart = true;
@@ -63,11 +58,11 @@ public class MainButtonActivity extends Activity implements
     TextView text_speed = null;
     TextView text_time = null;
     RelativeLayout button_all;
+
+    Button button_share;
+
     // Handler gets created on the UI-thread
     private Handler mHandler = new Handler();
-
-    GoogleApiClient mGoogleApiClient = null;
-    LocationRequest mLocationRequest = null;
 
     public final static String EXTRA_MESSAGE = "com.votors.runningx.MESSAGE";
     public final static String EXTRA_GpsRec = "com.votors.runningx.GpsRec";
@@ -98,7 +93,7 @@ public class MainButtonActivity extends Activity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_button);
-        manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+        manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         // Get a reference to the Press Me Button
         button_all = (RelativeLayout) findViewById(R.id.button_all);
@@ -107,17 +102,13 @@ public class MainButtonActivity extends Activity implements
         final Button button_map = (Button) findViewById(R.id.button_map);
         final Button button_stop = (Button) findViewById(R.id.button_stop);
         final Button button_chart = (Button) findViewById(R.id.button_chart);
-        final Button button_share = (Button) findViewById(R.id.share);
-        button_share.setEnabled(false);
-        button_share.setVisibility(View.INVISIBLE);
+        //button_share = (Button) findViewById(R.id.share);
+
         text_dist = (TextView) findViewById(R.id.button_distance);
         text_speed = (TextView) findViewById(R.id.button_speed);
         text_time = (TextView) findViewById(R.id.button_time);
-        buildGoogleApiClient();
-        mGoogleApiClient.connect();
-        createLocationRequest();
 
-        getLastLocation();
+        //getLastLocation();
 
         // Called each time the user clicks the Button
         button_start.setOnClickListener(new View.OnClickListener() {
@@ -153,8 +144,6 @@ public class MainButtonActivity extends Activity implements
                 Log.i(TAG, "start/pause/resume onclick..");
             }
         });
-
-//        final Intent intent = new Intent(this, MapActivity.class);
 
         button_map.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,14 +199,14 @@ public class MainButtonActivity extends Activity implements
                 startActivity(intent_chart);
             }
         });
-        button_share.setOnClickListener(new View.OnClickListener() {
+        /*button_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //button_chart.setText(getResources().getString(R.string.chart));
                 Log.i(TAG, "share onclick..");
                 showShare();
             }
-        });
+        });*/
         // update the time
         Thread thread = new Thread()
         {
@@ -284,15 +273,12 @@ public class MainButtonActivity extends Activity implements
         ) {
             public void onDrawerClosed(View view) {
                 getActionBar().setTitle(mTitle);
-                // calling onPrepareOptionsMenu() to show action bar icons
                 invalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
                 getActionBar().setTitle(mDrawerTitle);
-                // calling onPrepareOptionsMenu() to hide action bar icons
                 invalidateOptionsMenu();
-                //mDrawerList.invalidate();
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -300,7 +286,6 @@ public class MainButtonActivity extends Activity implements
         receiver_history = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                //mDrawerList.invalidate();
                 invalidateViews(mDrawerList);
                 adapter.notifyDataSetChanged();
                 Log.i(TAG, "get file changed message.");
@@ -312,7 +297,6 @@ public class MainButtonActivity extends Activity implements
         receiver_conf = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                //mDrawerList.invalidate();
                 Conf.read(context);
                 stopLocationUpdates();
                 startLocationUpdates();
@@ -513,25 +497,6 @@ public class MainButtonActivity extends Activity implements
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-
-
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        Log.i(TAG, "onConnected!!!!!!!!!!!");
-        //startLocationUpdates();
-//        getLocation();
-    }
-
-    @Override
-    public void onConnectionSuspended(int var1) {
-        Log.i(TAG, "onConnectionSuspended!!!!!!!!!!!");
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult var1) {
-        Log.i(TAG, "onConnectionFailed!!!!!!!!!!!");
-    }
-
     private void sleep(int t) {
         try {
             Thread.sleep(t);
@@ -540,19 +505,6 @@ public class MainButtonActivity extends Activity implements
         }
     }
 
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
-    protected void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(Conf.INTERVAL_LOCATION * 1000);
-        mLocationRequest.setFastestInterval(Conf.INTERVAL_LOCATION_FAST * 1000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-    }
     protected boolean startLocationUpdates() {
         try {
             manager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
@@ -591,15 +543,15 @@ public class MainButtonActivity extends Activity implements
 
     synchronized private void getLastLocation() {
         Log.i(TAG, "call get last location.");
-
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        if (mLastLocation != null) {
-            double lat = mLastLocation.getLatitude();
-            double lon = mLastLocation.getLongitude();
-            double alt = mLastLocation.getAltitude();
-            saveLocation(mLastLocation);
-        }
+        try {
+            Location mLastLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (mLastLocation != null) {
+                double lat = mLastLocation.getLatitude();
+                double lon = mLastLocation.getLongitude();
+                double alt = mLastLocation.getAltitude();
+                saveLocation(mLastLocation);
+            }
+        }catch (SecurityException e) {}
     }
 
     long preLowAccuracyTime;
@@ -634,7 +586,7 @@ public class MainButtonActivity extends Activity implements
         }
 
         final GpsRec gps = new GpsRec(date, l);
-        if (locations.size() >= Conf.SPEED_AVG-1) {
+        if (locations.size() >= 3-1) {
             lr.fix(locations,gps, 3);
             l.setLatitude(gps.lat);
             l.setLongitude(gps.lng);
@@ -644,15 +596,19 @@ public class MainButtonActivity extends Activity implements
             GpsRec pre = locations.get(locations.size() - 1);
             dist = pre.loc.distanceTo(l);
             dist = Math.abs(dist);
-            if (dist < Conf.MIN_DISTANCE) {
+            /*if (dist < Conf.MIN_DISTANCE) {
                 Log.i(TAG, String.format("dist too small. %f", dist));
                 return;
-            }
+            }*/
+
             //limit the distance acceleration with a factor.
-            if (Conf.ACCELERATE_FACTOR > 0 && locations.size()>1) {
+/*            if (Conf.ACCELERATE_FACTOR > 0 && locations.size()>1) {
                 float maxDistance = pre.speed * (date.getTime() - pre.date.getTime())/1000 * (1+Conf.ACCELERATE_FACTOR);
-                if (dist > maxDistance) {
-                    float ration = maxDistance/dist;
+                float minDistance = pre.speed * (date.getTime() - pre.date.getTime())/1000 * (1/(1+Conf.ACCELERATE_FACTOR));
+                if (dist > maxDistance || dist < minDistance) {
+                    float ration = 0;
+                    if (dist>maxDistance)ration = maxDistance/dist;
+                    if (dist<minDistance)ration = dist/minDistance;
                     gps.lat = pre.lat + (gps.lat-pre.lat) * ration;
                     gps.lng = pre.lng + (gps.lng-pre.lng) * ration;
                     gps.loc.setLatitude(gps.lat);
@@ -660,24 +616,28 @@ public class MainButtonActivity extends Activity implements
                     Log.i(TAG, String.format("location reset by factor: reduce %f, distance %f to %f", ration, dist,maxDistance));
                     dist = maxDistance;
                 }
+            }*/
 
-            }
             //get a temporal speed, and it will be corrected by a average speed.
             speed = dist / (1.0f * (date.getTime() - pre.getDate().getTime()) / 1000);
-            alt = l.getAltitude();
+            if (l.hasAltitude()){
+                alt = l.getAltitude();
+            }else{
+                alt = Conf.INVALID_ALT;
+            }
         }
 
         // speed: get the avg speed of SPEED_AVG points
-        if (locations.size()>=Conf.SPEED_AVG-1) {
-            float dist_avg = dist;
-            double alt_avg = alt;
+        if (Conf.SPEED_AVG > 0 && locations.size()>=Conf.SPEED_AVG-1) {
+            /*float dist_avg = dist;
             for (int i=0; i<Conf.SPEED_AVG-1; i++) {
                 dist_avg += locations.get(locations.size() - 1 - i).distance;
-                alt_avg += locations.get(locations.size() - 1 - i).getAlt();
-            }
-            GpsRec preN = locations.get(locations.size() -(Conf.SPEED_AVG-1));
+            }*/
+            GpsRec preN = locations.get(locations.size() - (Conf.SPEED_AVG - 1));
+            float dist_avg = l.distanceTo(preN.loc);
+            dist_avg = Math.abs(dist_avg);
             speed = dist_avg / (1.0f * (date.getTime() - preN.getDate().getTime()) / 1000);
-            alt = alt_avg / (Conf.SPEED_AVG);
+            //dist = dist_avg/Conf.SPEED_AVG;
         }
 
         gps.distance = dist;
@@ -774,10 +734,13 @@ public class MainButtonActivity extends Activity implements
     protected void onDestroy() {
         super.onDestroy();
         stopLocationUpdates();
-        mGoogleApiClient.disconnect();
+//        mGoogleApiClient.disconnect();
         this.unregisterReceiver(receiver_history);
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 }
 
 // no used

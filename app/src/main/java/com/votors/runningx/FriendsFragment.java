@@ -24,14 +24,14 @@ public class FriendsFragment extends Fragment {
             Bundle savedInstanceState) {
         context = getActivity().getApplicationContext();
         View rootView = inflater.inflate(R.layout.fragment_friends, container, false);
-        final Button button_share = (Button) rootView.findViewById(R.id.share);
+        /*final Button button_share = (Button) rootView.findViewById(R.id.share);
 
         button_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showShare();
             }
-        });
+        });*/
 
         return rootView;
     }

@@ -28,7 +28,11 @@ public class Conf {
     public static int LOCATION_ACCURACY = 50;
     public static int SPEED_AVG = 5;
     public static boolean GPS_ONLY = true;
-    public static float ACCELERATE_FACTOR = 0.2f;
+    public static float ACCELERATE_FACTOR = 1.0f;
+
+    // no stored
+    public static final int INVALID_ALT = -999;
+    public static final float MARK_DISTANCE = 1000;
 
     public static String TAG = "Conf";
 
@@ -158,12 +162,14 @@ public class Conf {
         if (speed < 0.000001) return 0;
         if (LENGTH_UNIT.equals(context.getResources().getString(R.string.international))) {
             if (SPEED_TYPE.equals(context.getResources().getString(R.string.pace))) {
+                if (speed<1)speed = 1;//avoid too big pace
                 return 1000/(60*speed);
             }else{
                 return (speed/1000)*3600;
             }
         }else{
             if (SPEED_TYPE.equals(context.getResources().getString(R.string.pace))) {
+                if (speed<1)speed = 1; //avoid too big pace
                 return 1609.34f/(60*speed);
             }else{
                 return (speed/1609.34f)*3600;
@@ -202,5 +208,16 @@ public class Conf {
             new File(rootDir+"/records").mkdir();
         }
         return rootDir;
+    }
+
+    public static float getMarkDistance(Context context, float totalDistance) {
+        float ret = 0;
+        if (LENGTH_UNIT.equals(context.getResources().getString(R.string.international))) {
+            ret = 1000;
+        }else{
+            ret = 1609.34f;
+        }
+        if (totalDistance < 1700) ret /= 10;
+        return ret;
     }
 }

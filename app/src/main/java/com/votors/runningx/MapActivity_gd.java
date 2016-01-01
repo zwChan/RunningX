@@ -19,7 +19,9 @@ import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.MapFragment;
 import com.amap.api.maps2d.SupportMapFragment;
 import com.amap.api.maps2d.model.BitmapDescriptorFactory;
+import com.amap.api.maps2d.model.CameraPosition;
 import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.maps2d.model.LatLngBounds;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.PolylineOptions;
 
@@ -32,8 +34,6 @@ public class MapActivity_gd extends FragmentActivity {
     private static final String BC_INTENT = "com.votors.runningx.BroadcastReceiver.location";
     public final static String EXTRA_GpsRec = "com.votors.runningx.GpsRec";
 
-    public final static int MARK_DISTANCE = 100;
-//    public static int ZOOM_LEVEL = 15;
     // The Map Object
     private AMap mMap;
 
@@ -42,11 +42,14 @@ public class MapActivity_gd extends FragmentActivity {
     private final LocationReceiver mReceiver = new LocationReceiver();
     private final IntentFilter intentFilter = new IntentFilter(BC_INTENT);
     ArrayList<GpsRec> locations = null;
-    double total_dist = 0;
+    float curr_dist = 0;
+    float total_dist = 0;
     double center_lat = 0;
     double center_lng = 0;
 
     int movePointCnt = 0;
+
+    LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,7 @@ public class MapActivity_gd extends FragmentActivity {
 
         setContentView(R.layout.main_map_gd);
         locations = (ArrayList<GpsRec>)getIntent().getSerializableExtra(EXTRA_MESSAGE);
+        for (GpsRec r: locations) total_dist += r.distance;
 
 //        intentFilter.setPriority(3);
         registerReceiver(mReceiver, intentFilter);
@@ -75,11 +79,11 @@ public class MapActivity_gd extends FragmentActivity {
             // Add a marker for every earthquake
             int cnt = 0;
             // If already run a long way, distance between mark should be larger.
-            int mark_distance = locations.size()>100 ? MARK_DISTANCE*10: MARK_DISTANCE;
+            float mark_distance = Conf.getMarkDistance(getApplicationContext(), total_dist);
             for (GpsRec rec: locations) {
                 Log.i(TAG, rec.toString());
                 cnt++;
-                if (cnt==1 || cnt == locations.size() || (int)Math.floor(total_dist/ mark_distance) != (int)Math.floor((total_dist+rec.distance)/ mark_distance)) {
+                if (cnt==1 || cnt == locations.size() || (int)Math.floor(curr_dist / mark_distance) != (int)Math.floor((curr_dist +rec.distance)/ mark_distance)) {
                     // Add a new marker
                     MarkerOptions mk = new MarkerOptions()
                             .position(new LatLng(rec.getLat(), rec.getLng()));
@@ -87,19 +91,30 @@ public class MapActivity_gd extends FragmentActivity {
                     // Set the title of the Marker's information window
                     if (cnt==1) {
                         mk.title(String.valueOf("start"));
-                    } else {
-                        mk.title(String.format("%.2f%s,%.1f%s",
-                                Conf.getDistance(getApplicationContext(), (float) (total_dist + rec.distance)),
+                        mk.icon(BitmapDescriptorFactory.defaultMarker(getMarkerColor(rec.speed)));
+                        mMap.addMarker(mk).showInfoWindow();
+                    } else if (cnt == locations.size()){
+                        mk.title(String.format("[end] %.1f%s,%.1f%s",
+                                Conf.getDistance(getApplicationContext(), (float) (curr_dist + rec.distance)),
                                 Conf.getDistanceUnit(getApplicationContext()),
                                 Conf.getSpeed(getApplicationContext(), rec.speed),
                                 Conf.getSpeedUnit(getApplicationContext())));
+                        mk.icon(BitmapDescriptorFactory.defaultMarker(getMarkerColor(rec.speed)));
+                        mMap.addMarker(mk).showInfoWindow();
+                    } else {
+                        mk.title(String.format("%.1f%s,%.1f%s",
+                                Conf.getDistance(getApplicationContext(), (float) (curr_dist + rec.distance)),
+                                Conf.getDistanceUnit(getApplicationContext()),
+                                Conf.getSpeed(getApplicationContext(), rec.speed),
+                                Conf.getSpeedUnit(getApplicationContext())));
+                        mk.icon(BitmapDescriptorFactory.defaultMarker(getMarkerColor(rec.speed)));
+                        mMap.addMarker(mk).showInfoWindow();
                     }
 
                     // Set the color for the Marker
-                    mk.icon(BitmapDescriptorFactory.defaultMarker(getMarkerColor(rec.speed)));
-                    mMap.addMarker(mk);
+                    builder.include(mk.getPosition());
                 }
-                total_dist += rec.distance;
+                curr_dist += rec.distance;
                 center_lat += rec.getLat();
                 center_lng += rec.getLng();
 
@@ -111,12 +126,62 @@ public class MapActivity_gd extends FragmentActivity {
         // Should compute map center from the actual data
         mMap.addPolyline(polylines);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(center_lat / locations.size(), center_lng / locations.size())));
-        float zoom = mMap.getMaxZoomLevel()-2;
-        if (total_dist > 500) zoom--;
-        if (total_dist > 5000) zoom--;
-        if (total_dist > 50000) zoom--;
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(zoom));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+
+        // see http://stackoverflow.com/questions/16367556/cameraupdatefactory-newlatlngbounds-is-not-workinf-all-the-time
+        mMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
+            @Override
+            public void onMapLoaded() {
+                LatLngBounds bounds = adjustBoundsForMaxZoomLevel(builder.build());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 500));
+            }
+        });
+
+        mMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition arg0) {
+//                LatLngBounds bounds = adjustBoundsForMaxZoomLevel(builder.build());
+//                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 10));
+            }
+            @Override
+            public void onCameraChangeFinish(CameraPosition var1){}
+
+        });
+
     }
+
+    @Override
+    public void onPostCreate (Bundle bundle) {
+        super.onPostCreate(bundle);
+    }
+
+    /**
+     * see http://stackoverflow.com/questions/15700808/setting-max-zoom-level-in-google-maps-android-api-v2
+     * @param bounds
+     * @return
+     */
+    private LatLngBounds adjustBoundsForMaxZoomLevel(LatLngBounds bounds) {
+        LatLng sw = bounds.southwest;
+        LatLng ne = bounds.northeast;
+        double deltaLat = Math.abs(sw.latitude - ne.latitude);
+        double deltaLon = Math.abs(sw.longitude - ne.longitude);
+
+        final double zoomN = 0.005; // minimum zoom coefficient
+        if (deltaLat < zoomN) {
+            sw = new LatLng(sw.latitude - (zoomN - deltaLat / 2), sw.longitude);
+            ne = new LatLng(ne.latitude + (zoomN - deltaLat / 2), ne.longitude);
+            bounds = new LatLngBounds(sw, ne);
+        }
+        else if (deltaLon < zoomN) {
+            sw = new LatLng(sw.latitude, sw.longitude - (zoomN - deltaLon / 2));
+            ne = new LatLng(ne.latitude, ne.longitude + (zoomN - deltaLon / 2));
+            bounds = new LatLngBounds(sw, ne);
+        }
+
+        return bounds;
+    }
+
+
     @Override
     protected void onDestroy() {
         unregisterReceiver(mReceiver);
@@ -152,25 +217,27 @@ public class MapActivity_gd extends FragmentActivity {
             }
 
             // If already run a long way, distance between mark should be larger.
-            int mark_distance = locations.size()>200 ? MARK_DISTANCE*10: MARK_DISTANCE;
-            if (movePointCnt == 0 || (int)Math.floor(total_dist/ mark_distance) !=  (int)Math.floor((total_dist+rec.distance)/ mark_distance)) {
+            float mark_distance = Conf.getMarkDistance(getApplicationContext(), curr_dist);
+            if (movePointCnt == 0 || (int)Math.floor(curr_dist / mark_distance) !=  (int)Math.floor((curr_dist +rec.distance)/ mark_distance)) {
                 // Add a new marker
                 MarkerOptions mk = new MarkerOptions()
                         .position(new LatLng(rec.getLat(), rec.getLng()));
 
                 // Set the title of the Marker's information window
-                //mk.title(String.format("%.0fm,%.1fm/s",Math.floor(total_dist + rec.distance),rec.speed));
-                mk.title(String.format("%.2f%s,%.1f%s",
-                        Conf.getDistance(getApplicationContext(),(float)(total_dist + rec.distance)),
+                //mk.title(String.format("%.0fm,%.1fm/s",Math.floor(curr_dist + rec.distance),rec.speed));
+                mk.title(String.format("%.1f%s,%.1f%s",
+                        Conf.getDistance(getApplicationContext(), (float) (curr_dist + rec.distance)),
                         Conf.getDistanceUnit(getApplicationContext()),
                         Conf.getSpeed(getApplicationContext(),rec.speed),
                         Conf.getSpeedUnit(getApplicationContext())));
 
                 // Set the color for the Marker
                 mk.icon(BitmapDescriptorFactory.defaultMarker(getMarkerColor(rec.speed)));
-                mMap.addMarker(mk);
+                mMap.addMarker(mk).showInfoWindow();
+                builder.include(mk.getPosition());
             }
             movePointCnt++;
+            curr_dist += rec.distance;
             total_dist += rec.distance;
             center_lat += rec.getLat();
             center_lng += rec.getLng();
@@ -179,11 +246,6 @@ public class MapActivity_gd extends FragmentActivity {
             polylines.add(new LatLng(rec.getLat(), rec.getLng()));
             mMap.addPolyline(polylines);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(rec.getLat(), rec.getLng())));
-
-            if (movePointCnt == 1){
-                Log.i(TAG, String.format("Zoom max %f, min %f", mMap.getMaxZoomLevel(), mMap.getMinZoomLevel()));
-                mMap.moveCamera(CameraUpdateFactory.zoomTo(mMap.getMaxZoomLevel()-2));
-            }
         }
 
     }

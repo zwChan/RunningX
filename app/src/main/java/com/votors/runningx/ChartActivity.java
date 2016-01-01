@@ -46,16 +46,40 @@ public class ChartActivity extends Activity{
         ArrayList<Float> yPace = new ArrayList<>();
         ArrayList<Integer> yAlt = new ArrayList<>();
 
+        float pre_speed = 0;
+        float alt = 0;
+        float speed = 0;
+        ArrayList<Float> avgAlt = new ArrayList<>();
+        ArrayList<Float> avgSpeed = new ArrayList<>();
+
         for (GpsRec rec: locations) {
             total_dist += rec.distance;
-            //xDist.add(Math.round(Conf.getDistance(getApplicationContext(), total_dist)));
-            xDist.add((Conf.getDistance(getApplicationContext(), total_dist)));
+
+            avgSpeed.add(rec.speed);
+            if (avgSpeed.size()>Conf.SPEED_AVG)avgSpeed.remove(0);
+            speed = 0;
+            for(float s: avgSpeed)speed += s;
+            speed /= avgSpeed.size();
+            if (Conf.ACCELERATE_FACTOR>0 && pre_speed>0 && speed>pre_speed*(1+Conf.ACCELERATE_FACTOR))speed=pre_speed*(1+Conf.ACCELERATE_FACTOR);
+            if (Conf.ACCELERATE_FACTOR>0 && pre_speed>0 && speed<pre_speed*(1/(1+Conf.ACCELERATE_FACTOR)))speed=pre_speed*(1/(1+Conf.ACCELERATE_FACTOR));
+            pre_speed = speed;
+
+            if (rec.getAlt() != Conf.INVALID_ALT) {
+                avgAlt.add((float)rec.getAlt());
+                if (avgAlt.size()>Conf.SPEED_AVG)avgAlt.remove(0);
+                alt = 0;
+                for (float t: avgAlt) alt += t;
+                alt /= avgAlt.size();
+            }
+
+            //xDist.add(Math.round(Conf.getDistance(getApplicationContext(), curr_dist)));
             if (locations.indexOf(rec)>= Conf.SPEED_AVG) {
-                yPace.add(Conf.getSpeed(getApplicationContext(),rec.speed));
-                yAlt.add(Math.round(Conf.getAltitude(getApplicationContext(), (float)rec.getAlt())));
+                xDist.add((Conf.getDistance(getApplicationContext(), total_dist)));
+                yPace.add(Conf.getSpeed(getApplicationContext(),speed));
+                yAlt.add(Math.round(Conf.getAltitude(getApplicationContext(), alt)));
             } else {
-                yPace.add(0f);
-                yAlt.add(0);
+                /*yPace.add(0f);
+                yAlt.add(0);*/
             }
         }
         // initialize our XYPlot reference:
