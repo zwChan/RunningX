@@ -92,7 +92,7 @@ public class MapActivity extends Activity {
                         mk.title(String.format("[end] %.1f%s,%.1f%s",
                                 Conf.getDistance(curr_dist + rec.distance),
                                 Conf.getDistanceUnit(),
-                                Conf.getSpeed((curr_dist + rec.distance) / (rec.date.getTime() - locations.get(0).date.getTime()) / 1000, 0),
+                                Conf.getSpeed((curr_dist + rec.distance) / (rec.date.getTime() - locations.get(0).date.getTime()) * 1000, 0),
                                 Conf.getSpeedUnit()));
                         mk.icon(BitmapDescriptorFactory.defaultMarker(getMarkerColor(rec.speed)));
                         mMap.addMarker(mk).showInfoWindow();
