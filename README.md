@@ -18,22 +18,39 @@ Now it has the following functions:
 
 ## Examples
 - Start
+
 ![Map](https://raw.githubusercontent.com/zwChan/RunningX/master/resource/main-start.png)
+
 - Running
+
 ![Chart](https://raw.githubusercontent.com/zwChan/RunningX/master/resource/main-running.png)
+
 - Map: Google map
+
 ![Button](https://raw.githubusercontent.com/zwChan/RunningX/master/resource/map-gg.png)
+
 - Map: Gaode map (Gaode map can not display detail map information in US, but it should work in China)
+
 ![Button](https://raw.githubusercontent.com/zwChan/RunningX/master/resource/map-gd.png)
+
 - Chart pace
+
 ![Button](https://raw.githubusercontent.com/zwChan/RunningX/master/resource/chart-pace.png)
+
 - Chart speed
+
 ![Button](https://raw.githubusercontent.com/zwChan/RunningX/master/resource/chart-speed.png)
+
 - Configuration
+
 ![Button](https://raw.githubusercontent.com/zwChan/RunningX/master/resource/conf.png)
+
 - History
+
 ![Button](https://raw.githubusercontent.com/zwChan/RunningX/master/resource/history.png)
+
 - About
+
 ![Button](https://raw.githubusercontent.com/zwChan/RunningX/master/resource/about.png)
 
 
