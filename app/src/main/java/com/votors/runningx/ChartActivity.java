@@ -6,13 +6,12 @@ package com.votors.runningx;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.WindowManager;
+
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ChartActivity extends Activity{
     public final static String EXTRA_MESSAGE = "com.votors.runningx.MESSAGE";
@@ -24,7 +23,9 @@ public class ChartActivity extends Activity{
     //private final MapActivity.LocationReceiver mReceiver = new MapActivity.LocationReceiver();
     //private final IntentFilter intentFilter = new IntentFilter(BC_INTENT);
     ArrayList<GpsRec> locations = null;
+    float curr_dist = 0;
     float total_dist = 0;
+    long total_time = 0; //second
 
     int movePointCnt = 0;
 
@@ -35,7 +36,7 @@ public class ChartActivity extends Activity{
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
+        Conf.init(getApplicationContext());
         // fun little snippet that prevents users from taking screenshots
         // on ICS+ devices :-)
         /*getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
@@ -49,11 +50,19 @@ public class ChartActivity extends Activity{
         float pre_speed = 0;
         float alt = 0;
         float speed = 0;
+        float yMaxPace = 0;
+        int yMaxAlt = 0;
         ArrayList<Float> avgAlt = new ArrayList<>();
         ArrayList<Float> avgSpeed = new ArrayList<>();
+        if (locations.size()>0)
+            total_time = (locations.get(locations.size()-1).getDate().getTime()-locations.get(0).getDate().getTime())/1000;
+        for(GpsRec r:locations) total_dist += r.distance;
+
+        float avgSpeedAll = total_dist/total_time;
+
 
         for (GpsRec rec: locations) {
-            total_dist += rec.distance;
+            curr_dist += rec.distance;
 
             avgSpeed.add(rec.speed);
             if (avgSpeed.size()>Conf.SPEED_AVG)avgSpeed.remove(0);
@@ -74,23 +83,28 @@ public class ChartActivity extends Activity{
 
             //xDist.add(Math.round(Conf.getDistance(getApplicationContext(), curr_dist)));
             if (locations.indexOf(rec)>= Conf.SPEED_AVG) {
-                xDist.add((Conf.getDistance(getApplicationContext(), total_dist)));
-                yPace.add(Conf.getSpeed(getApplicationContext(),speed));
-                yAlt.add(Math.round(Conf.getAltitude(getApplicationContext(), alt)));
+                xDist.add((Conf.getDistance(curr_dist)));
+                float y_pace = Conf.getSpeed( speed, avgSpeedAll);
+                if (y_pace>yMaxPace) yMaxPace=y_pace;
+                yPace.add(y_pace);
+                int y_alt = Math.round(Conf.getAltitude(alt));
+                if (y_alt>0) yMaxAlt = y_alt;
+                yAlt.add(y_alt);
             } else {
                 /*yPace.add(0f);
                 yAlt.add(0);*/
             }
         }
+
         // initialize our XYPlot reference:
         plotPace = (XYPlot) findViewById(R.id.pace);
         plotPace.setTitle(Conf.SPEED_TYPE);
-        plotPace.setRangeLabel(Conf.getSpeedUnit(getApplicationContext()));
-        plotPace.setDomainLabel(Conf.getDistanceUnit(getApplicationContext()));
+        plotPace.setRangeLabel(Conf.getSpeedUnit());
+        plotPace.setDomainLabel(Conf.getDistanceUnit());
 
         plotAlt = (XYPlot) findViewById(R.id.altitude);
-        plotAlt.setRangeLabel(Conf.getAltitudeUnit(getApplicationContext()));
-        plotAlt.setDomainLabel(Conf.getDistanceUnit(getApplicationContext()));
+        plotAlt.setRangeLabel(Conf.getAltitudeUnit());
+        plotAlt.setDomainLabel(Conf.getDistanceUnit());
 
         // Turn the above arrays into XYSeries':
         XYSeries series1 = new SimpleXYSeries(
@@ -117,9 +131,14 @@ public class ChartActivity extends Activity{
         plotPace.setTicksPerRangeLabel(3);
         plotAlt.setTicksPerRangeLabel(3);
         plotPace.getGraphWidget().setDomainLabelOrientation(-45);
-        plotPace.getGraphWidget().setRangeLabelOrientation(-90);
+        plotPace.getGraphWidget().setRangeLabelOrientation(-45);
         plotAlt.getGraphWidget().setDomainLabelOrientation(-45);
-        plotAlt.getGraphWidget().setRangeLabelOrientation(-90);
+        plotAlt.getGraphWidget().setRangeLabelOrientation(-45);
+
+        plotPace.setDomainLeftMin(0);
+        plotPace.setDomainRightMax(Math.floor(curr_dist));
+        plotPace.setRangeBottomMin(0);
+        plotPace.setRangeTopMax(Math.floor(yMaxPace));
     }
 
 }

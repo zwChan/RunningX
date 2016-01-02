@@ -50,6 +50,7 @@ public class MapActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Conf.init(getApplicationContext());
 
         setContentView(R.layout.main_map);
         locations = (ArrayList<GpsRec>)getIntent().getSerializableExtra(EXTRA_MESSAGE);
@@ -73,7 +74,7 @@ public class MapActivity extends Activity {
             // Add a marker for every earthquake
             int cnt = 0;
             // If already run a long way, distance between mark should be larger.
-            float mark_distance = Conf.getMarkDistance(getApplicationContext(), total_dist);
+            float mark_distance = Conf.getMarkDistance(total_dist);
             for (GpsRec rec: locations) {
                 Log.i(TAG, rec.toString());
                 cnt++;
@@ -89,18 +90,18 @@ public class MapActivity extends Activity {
                         mMap.addMarker(mk).showInfoWindow();
                     } else if (cnt == locations.size()){
                         mk.title(String.format("[end] %.1f%s,%.1f%s",
-                                Conf.getDistance(getApplicationContext(), (float) (curr_dist + rec.distance)),
-                                Conf.getDistanceUnit(getApplicationContext()),
-                                Conf.getSpeed(getApplicationContext(), rec.speed),
-                                Conf.getSpeedUnit(getApplicationContext())));
+                                Conf.getDistance(curr_dist + rec.distance),
+                                Conf.getDistanceUnit(),
+                                Conf.getSpeed((curr_dist + rec.distance) / (rec.date.getTime() - locations.get(0).date.getTime()) / 1000, 0),
+                                Conf.getSpeedUnit()));
                         mk.icon(BitmapDescriptorFactory.defaultMarker(getMarkerColor(rec.speed)));
                         mMap.addMarker(mk).showInfoWindow();
                     } else {
                         mk.title(String.format("%.1f%s,%.1f%s",
-                                Conf.getDistance(getApplicationContext(), (float) (curr_dist + rec.distance)),
-                                Conf.getDistanceUnit(getApplicationContext()),
-                                Conf.getSpeed(getApplicationContext(), rec.speed),
-                                Conf.getSpeedUnit(getApplicationContext())));
+                                Conf.getDistance((curr_dist + rec.distance)),
+                                Conf.getDistanceUnit(),
+                                Conf.getSpeed(rec.speed, 0),
+                                Conf.getSpeedUnit()));
                         mk.icon(BitmapDescriptorFactory.defaultMarker(getMarkerColor(rec.speed)));
                         mMap.addMarker(mk).showInfoWindow();
                     }
@@ -126,8 +127,10 @@ public class MapActivity extends Activity {
         mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
             public void onMapLoaded() {
-                LatLngBounds bounds = adjustBoundsForMaxZoomLevel(builder.build());
-                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
+                if (locations.size()>0) {
+                    LatLngBounds bounds = adjustBoundsForMaxZoomLevel(builder.build());
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 150));
+                }
             }
         });
 
@@ -186,6 +189,8 @@ public class MapActivity extends Activity {
             hue = 1;
         } else if (speed > 9) {
             hue = 9;
+        }else{
+            hue = speed;
         }
 
         return (36 * hue);
@@ -208,7 +213,7 @@ public class MapActivity extends Activity {
             }
 
             // If already run a long way, distance between mark should be larger.
-            float mark_distance = Conf.getMarkDistance(getApplicationContext(), curr_dist);
+            float mark_distance = Conf.getMarkDistance(curr_dist);
             if (movePointCnt == 0 || (int)Math.floor(curr_dist / mark_distance) !=  (int)Math.floor((curr_dist +rec.distance)/ mark_distance)) {
                 // Add a new marker
                 MarkerOptions mk = new MarkerOptions()
@@ -217,10 +222,10 @@ public class MapActivity extends Activity {
                 // Set the title of the Marker's information window
                 //mk.title(String.format("%.0fm,%.1fm/s",Math.floor(curr_dist + rec.distance),rec.speed));
                 mk.title(String.format("%.1f%s,%.1f%s",
-                        Conf.getDistance(getApplicationContext(), (float) (curr_dist + rec.distance)),
-                        Conf.getDistanceUnit(getApplicationContext()),
-                        Conf.getSpeed(getApplicationContext(),rec.speed),
-                        Conf.getSpeedUnit(getApplicationContext())));
+                        Conf.getDistance(curr_dist + rec.distance),
+                        Conf.getDistanceUnit(),
+                        Conf.getSpeed(rec.speed, 0),
+                        Conf.getSpeedUnit()));
 
                 // Set the color for the Marker
                 mk.icon(BitmapDescriptorFactory.defaultMarker(getMarkerColor(rec.speed)));

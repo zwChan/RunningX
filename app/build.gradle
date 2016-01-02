@@ -13,6 +13,7 @@ android {
         versionCode 1
         versionName "1.0"
         //signingConfig signingConfigs.config
+        //multiDexEnabled true
     }
     buildTypes {
         release {
@@ -30,20 +31,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.google.android.gms:play-services:8.3.0'
-    // compile 'org.apache.httpcomponents:httpclient:4.3.4'
     compile 'com.androidplot:androidplot-core:0.6.1'
-    compile files('libs/AMap_android_API_2DMap_Lib_V2.7.0_20151124.jar')
-    compile files('libs/AMap_Location_v2.0.0_20151117.jar')
-    compile files('libs/AMap_Services_V2.7.0_20151125.jar')
-    compile files('libs/Volley.jar')
-    compile files('libs/MobCommons.jar')
-    compile files('libs/MobTools.jar')
-    compile files('libs/ShareSDK-Core-2.6.5.jar')
-    compile files('libs/ShareSDK-Douban-2.6.5.jar')
-    compile files('libs/ShareSDK-Facebook-2.6.5.jar')
-    compile files('libs/ShareSDK-Wechat-Moments-2.6.5.jar')
-    compile files('libs/ShareSDK-Wechat-Core-2.6.5.jar')
-    compile files('libs/Volley.jar')
-    compile files('libs/ShareSDK-Twitter-2.6.5.jar')
-    compile files('libs/ShareSDK-Twitter-2.6.5.jar')
 }

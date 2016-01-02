@@ -17,18 +17,19 @@ import java.io.OutputStreamWriter;
  * Created by Jason on 2015/12/22 0022.
  */
 public class Conf {
+    static Context context;
 
     public static String LENGTH_UNIT = "International unit";
     public static String MAP_TYPE = "Google Map";
     public static String SPEED_TYPE = "Pace";
 
     public static int MIN_DISTANCE = 3;
-    public static int INTERVAL_LOCATION = 5;  //second
+    public static int INTERVAL_LOCATION = 10;  //second
     public static int INTERVAL_LOCATION_FAST = 1; //second
     public static int LOCATION_ACCURACY = 50;
     public static int SPEED_AVG = 5;
     public static boolean GPS_ONLY = true;
-    public static float ACCELERATE_FACTOR = 1.0f;
+    public static float ACCELERATE_FACTOR = 0.5f;
 
     // no stored
     public static final int INVALID_ALT = -999;
@@ -36,13 +37,20 @@ public class Conf {
 
     public static String TAG = "Conf";
 
-    static boolean existConfFile(Context context) {
-        String filename = String.format(getRootDir(context) + "/conf.json");
+    static public void init(Context context) {
+        if (Conf.context == null) {
+            Conf.context = context;
+            read();
+        }
+    }
+
+    static boolean existConfFile() {
+        String filename = String.format(getRootDir() + "/conf.json");
         return new File(filename).exists();
     }
 
-    static public void  save(Context context) {
-        String filename = String.format(getRootDir(context) + "/conf.json");
+    static public void  save() {
+        String filename = String.format(getRootDir() + "/conf.json");
         try {
             FileOutputStream fout = new FileOutputStream(filename);
             JsonWriter writer = new JsonWriter(new OutputStreamWriter(fout, "UTF-8"));
@@ -69,8 +77,8 @@ public class Conf {
         }
     }
 
-    static public void read(Context context) {
-        String filename = String.format(getRootDir(context) + "/conf.json");
+    static public void read() {
+        String filename = String.format(getRootDir() + "/conf.json");
         try {
             FileInputStream fin = new FileInputStream(filename);
             JsonReader reader = new JsonReader(new InputStreamReader(fin, "UTF-8"));
@@ -113,21 +121,21 @@ public class Conf {
         }
     }
 
-    public static String getDistanceUnit(Context context) {
+    public static String getDistanceUnit() {
         if (LENGTH_UNIT.equals(context.getResources().getString(R.string.international))) {
             return "Km";
         }else{
             return "Mile";
         }
     }
-    public static String getAltitudeUnit(Context context) {
+    public static String getAltitudeUnit() {
         if (LENGTH_UNIT.equals(context.getResources().getString(R.string.international))) {
             return "m";
         }else{
             return "feet";
         }
     }
-    public static String getSpeedUnit(Context context) {
+    public static String getSpeedUnit() {
         if (LENGTH_UNIT.equals(context.getResources().getString(R.string.international))) {
             if (SPEED_TYPE.equals(context.getResources().getString(R.string.pace))) {
                 return "Min/Km";
@@ -143,7 +151,7 @@ public class Conf {
         }
     }
 
-    public static float getDistance(Context context, float distance) {
+    public static float getDistance(float distance) {
         if (LENGTH_UNIT.equals(context.getResources().getString(R.string.international))) {
             return distance/1000f;
         }else{
@@ -151,25 +159,25 @@ public class Conf {
         }
     }
     // feet or m
-    public static float getAltitude(Context context, float alt) {
+    public static float getAltitude(float alt) {
         if (LENGTH_UNIT.equals(context.getResources().getString(R.string.international))) {
             return alt;
         }else{
             return alt * 3.28084f;
         }
     }
-    public static float getSpeed(Context context, float speed) {
+    public static float getSpeed(float speed, float avgSpeed) {
         if (speed < 0.000001) return 0;
         if (LENGTH_UNIT.equals(context.getResources().getString(R.string.international))) {
             if (SPEED_TYPE.equals(context.getResources().getString(R.string.pace))) {
-                if (speed<1)speed = 1;//avoid too big pace
+                if (speed<avgSpeed/2)speed = avgSpeed/2;//avoid too big pace
                 return 1000/(60*speed);
             }else{
                 return (speed/1000)*3600;
             }
         }else{
             if (SPEED_TYPE.equals(context.getResources().getString(R.string.pace))) {
-                if (speed<1)speed = 1; //avoid too big pace
+                if (speed<avgSpeed/2)speed = avgSpeed/2;//avoid too big pace
                 return 1609.34f/(60*speed);
             }else{
                 return (speed/1609.34f)*3600;
@@ -177,8 +185,8 @@ public class Conf {
         }
     }
 
-    public static String getSpeedString(Context context,float speed) {
-        float sp = getSpeed(context,speed);
+    public static String getSpeedString(float speed) {
+        float sp = getSpeed(speed,0);
         if (SPEED_TYPE.equals(context.getResources().getString(R.string.pace))) {
             return String.format("%02d:%02d", (int)Math.floor(sp), Math.round(60 * (sp - Math.floor(sp))));
         } else {
@@ -186,7 +194,7 @@ public class Conf {
         }
     }
 
-    public static Intent getMapIntent(Context context) {
+    public static Intent getMapIntent() {
         if (MAP_TYPE.equals(context.getResources().getString(R.string.gmap))) {
             return new Intent(context, MapActivity.class);
         } else {
@@ -194,7 +202,7 @@ public class Conf {
         }
     }
 
-    public static String getRootDir(Context context) {
+    public static String getRootDir() {
         File dir = Environment.getExternalStorageDirectory();
         String rootDir = null;
         if (dir == null) {
@@ -210,7 +218,7 @@ public class Conf {
         return rootDir;
     }
 
-    public static float getMarkDistance(Context context, float totalDistance) {
+    public static float getMarkDistance(float totalDistance) {
         float ret = 0;
         if (LENGTH_UNIT.equals(context.getResources().getString(R.string.international))) {
             ret = 1000;

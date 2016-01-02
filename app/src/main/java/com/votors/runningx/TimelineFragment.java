@@ -88,7 +88,7 @@ public class TimelineFragment extends Fragment implements AdapterView.OnItemSele
             public void onClick(View v) {
                 if (locations != null) {
                     button_map.setText(getResources().getString(R.string.map));
-                    Intent intent = Conf.getMapIntent(context);
+                    Intent intent = Conf.getMapIntent();
                     intent.putExtra(EXTRA_MESSAGE, locations);
                     Log.i(TAG, "MAP onclick..");
                     startActivity(intent);
@@ -147,8 +147,8 @@ public class TimelineFragment extends Fragment implements AdapterView.OnItemSele
             locations = record.gpsRecs;
             final String timeStr = String.format("%d:%02d:%02d", record.usedTime / 3600, record.usedTime % 3600 / 60, record.usedTime % 3600 % 60);
             text_time.setText(timeStr);
-            text_speed.setText(String.format("%s %s", Conf.getSpeedString(context, record.distance/record.usedTime), Conf.getSpeedUnit(context)));
-            text_dist.setText(String.format("%.2f %s", Conf.getDistance(context,record.distance), Conf.getDistanceUnit(context)));
+            text_speed.setText(String.format("%s %s", Conf.getSpeedString(record.distance/record.usedTime), Conf.getSpeedUnit()));
+            text_dist.setText(String.format("%.2f %s", Conf.getDistance(record.distance), Conf.getDistanceUnit()));
 
         } else {
             locations = null;

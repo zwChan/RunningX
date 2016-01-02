@@ -46,8 +46,7 @@ public class ConfFragment extends Fragment implements AdapterView.OnItemSelected
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = getActivity();
         rootView = inflater.inflate(R.layout.fragment_conf, container, false);
-
-        Conf.read(context);
+        Conf.init(context);
 
         // Get a reference to the Press Me Button
         text_warn = (TextView) rootView.findViewById(R.id.conf_changed_warning);
@@ -232,7 +231,7 @@ public class ConfFragment extends Fragment implements AdapterView.OnItemSelected
             Intent msg = new Intent(CONF_MESSAGE);
             context.sendOrderedBroadcast(msg, null);
         }
-        Conf.save(context);
+        Conf.save();
 
     }
 

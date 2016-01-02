@@ -32,7 +32,7 @@ public class Record {
     Record(Context context) {this.context = context;}
 
     static public ArrayList<Date> getRecords(Context context) {
-        File f = new File(Conf.getRootDir(context)+"/records");
+        File f = new File(Conf.getRootDir()+"/records");
         File file[] = f.listFiles();
         ArrayList<Date> ret = new ArrayList<>();
         if (file != null){
@@ -48,7 +48,7 @@ public class Record {
     }
 
     public void  save() {
-        String filename = String.format(Conf.getRootDir(context)+"/records" + "/record-%d.json", System.currentTimeMillis());
+        String filename = String.format(Conf.getRootDir()+"/records" + "/record-%d.json", System.currentTimeMillis());
         try {
             FileOutputStream fout = new FileOutputStream(filename);
             JsonWriter writer = new JsonWriter(new OutputStreamWriter(fout, "UTF-8"));
@@ -91,7 +91,7 @@ public class Record {
     }
 
     public void read(Date date) {
-        String filename = String.format(Conf.getRootDir(context)+"/records"+"/record-%d.json", date.getTime());
+        String filename = String.format(Conf.getRootDir()+"/records"+"/record-%d.json", date.getTime());
         try {
             FileInputStream fin = new FileInputStream(filename);
             JsonReader reader = new JsonReader(new InputStreamReader(fin, "UTF-8"));
@@ -152,7 +152,7 @@ public class Record {
     }
 
     static void delete(Context context, Date date) {
-        String filename = String.format(Conf.getRootDir(context)+"/records" + "/record-%d.json", date.getTime());
+        String filename = String.format(Conf.getRootDir()+"/records" + "/record-%d.json", date.getTime());
         File f = new File(filename);
         f.delete();
         // broadcast a message
