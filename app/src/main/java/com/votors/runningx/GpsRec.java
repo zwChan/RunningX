@@ -4,6 +4,9 @@ package com.votors.runningx;
 import android.location.Location;
 import android.util.Log;
 
+import com.votors.runningx.transform.GCJPointer;
+import com.votors.runningx.transform.WGSPointer;
+
 import java.io.Serializable;
 import 	java.util.Date;
 
@@ -17,7 +20,7 @@ public class GpsRec implements Serializable {
     public Date date;
     transient public Location loc;  // only for computing
     public static final String TAG = "GpsRec";
-
+    private GCJPointer gcjPointer;
     protected GpsRec(){}
     protected GpsRec(Date date, Location l) {
         super();
@@ -26,6 +29,7 @@ public class GpsRec implements Serializable {
         this.alt = l.getAltitude();
         this.date = date;
         this.loc = l;
+        this.gcjPointer = new WGSPointer(l.getLatitude(), l.getLongitude()).toGCJPointer();
     }
 
     public double getLat() {
@@ -34,6 +38,13 @@ public class GpsRec implements Serializable {
 
     public double getLng() {
         return lng;
+    }
+    public double getLatChina() {
+        return gcjPointer.getLatitude();
+    }
+
+    public double getLngChina() {
+        return gcjPointer.getLongitude();
     }
 
     public double getAlt() {
