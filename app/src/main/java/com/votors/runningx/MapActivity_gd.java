@@ -87,7 +87,7 @@ public class MapActivity_gd extends FragmentActivity {
                 if (cnt==1 || cnt == locations.size() || (int)Math.floor(curr_dist / mark_distance) != (int)Math.floor((curr_dist +rec.distance)/ mark_distance)) {
                     // Add a new marker
                     MarkerOptions mk = new MarkerOptions()
-                            .position(new LatLng(rec.getLat(), rec.getLng()));
+                            .position(new LatLng(rec.getLatChina(), rec.getLngChina()));
 
                     // Set the title of the Marker's information window
                     if (cnt==1) {
@@ -116,10 +116,10 @@ public class MapActivity_gd extends FragmentActivity {
                     builder.include(mk.getPosition());
                 }
                 curr_dist += rec.distance;
-                center_lat += rec.getLat();
-                center_lng += rec.getLng();
+                center_lat += rec.getLatChina();
+                center_lng += rec.getLngChina();
 
-                polylines.add(new LatLng(rec.getLat(),rec.getLng()));
+                polylines.add(new LatLng(rec.getLatChina(),rec.getLngChina()));
             }
         }
 
@@ -218,7 +218,7 @@ public class MapActivity_gd extends FragmentActivity {
             polylines.color(Color.BLUE).width(10);
             if (locations.size()>0) {
                 last = locations.get(locations.size() - 1);
-                polylines.add(new LatLng(last.getLat(),last.getLng()));
+                polylines.add(new LatLng(last.getLatChina(),last.getLngChina()));
             }
 
             // If already run a long way, distance between mark should be larger.
@@ -226,7 +226,7 @@ public class MapActivity_gd extends FragmentActivity {
             if (movePointCnt == 0 || (int)Math.floor(curr_dist / mark_distance) !=  (int)Math.floor((curr_dist +rec.distance)/ mark_distance)) {
                 // Add a new marker
                 MarkerOptions mk = new MarkerOptions()
-                        .position(new LatLng(rec.getLat(), rec.getLng()));
+                        .position(new LatLng(rec.getLatChina(), rec.getLngChina()));
 
                 // Set the title of the Marker's information window
                 //mk.title(String.format("%.0fm,%.1fm/s",Math.floor(curr_dist + rec.distance),rec.speed));
@@ -244,13 +244,13 @@ public class MapActivity_gd extends FragmentActivity {
             movePointCnt++;
             curr_dist += rec.distance;
             total_dist += rec.distance;
-            center_lat += rec.getLat();
-            center_lng += rec.getLng();
+            center_lat += rec.getLatChina();
+            center_lng += rec.getLngChina();
             locations.add(rec);
 
-            polylines.add(new LatLng(rec.getLat(), rec.getLng()));
+            polylines.add(new LatLng(rec.getLatChina(), rec.getLngChina()));
             mMap.addPolyline(polylines);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(rec.getLat(), rec.getLng())));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(rec.getLatChina(), rec.getLngChina())));
             mMap.moveCamera(CameraUpdateFactory.zoomTo(mMap.getMaxZoomLevel() - 2));
         }
 
