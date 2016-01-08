@@ -18,6 +18,25 @@
     <string name="drawer_close">Slider Menu Closed</string>
     <string name="share">Share</string>
 
+    <string name="no_data_save">No new data to be saved</string>
+    <string name="gps_prompt">Your GPS seems to be disabled, do you want to enable it?</string>
+    <string name="gps_no_permision">The app do not have the permission to use GPS.</string>
+    <string name="gps_listen_fail">Listen to location fail. </string>
+    <string name="gps_precision_low">ACCURACY too low. %f</string>
+    <string name="gps_precision_low2">Gps accuracy too low, less than %dm</string>
+
+    <string name="exit_prompt">You have unsaved running record, continue to exit?</string>
+    <string name="exit_prompt2">Tap back button twice in order to exit</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="end">end</string>
+
+    <string name="altitude">Altitude</string>
+
+    <string name="select_prompt">Please select a record</string>
+    <string name="select_no">No record is selected.</string>
+
+    <string name="restart_prompt">Restarting App is recommended after changing configuration.</string>
 
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">

@@ -91,11 +91,12 @@ public class MapActivity_gd extends FragmentActivity {
 
                     // Set the title of the Marker's information window
                     if (cnt==1) {
-                        mk.title(String.valueOf("start"));
+                        mk.title(String.valueOf(getResources().getString(R.string.start)));
                         mk.icon(BitmapDescriptorFactory.defaultMarker(getMarkerColor(rec.speed)));
                         mMap.addMarker(mk).showInfoWindow();
                     } else if (cnt == locations.size()){
-                        mk.title(String.format("[end] %.1f%s,%.1f%s",
+                        mk.title(String.format("[%s] %.1f%s,%.1f%s",
+                                getResources().getString(R.string.end),
                                 Conf.getDistance(curr_dist + rec.distance),
                                 Conf.getDistanceUnit(),
                                 Conf.getSpeed((curr_dist + rec.distance)/(rec.date.getTime()-locations.get(0).date.getTime())*1000,0),

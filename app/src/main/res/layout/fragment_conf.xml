@@ -11,7 +11,7 @@
         android:id="@+id/conf_changed_warning"
         android:layout_column="0"
         android:gravity="left"
-        android:text="Restarting App is recommended after changing configuration."
+        android:text="@string/restart_prompt"
         android:textColor="@color/red"
         android:padding="3dip" />
     <View

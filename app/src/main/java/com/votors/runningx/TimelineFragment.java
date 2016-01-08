@@ -56,7 +56,7 @@ public class TimelineFragment extends Fragment implements AdapterView.OnItemSele
         recordsDate = Record.getRecords(context);
         SimpleDateFormat sdf = new SimpleDateFormat () ;
         ArrayList<String> datestr = new ArrayList<>();
-        datestr.add("Please select a record");
+        datestr.add(context.getResources().getString(R.string.select_prompt));
         for (Date date: recordsDate) {
             datestr.add(sdf.format(date));
         }
@@ -77,7 +77,7 @@ public class TimelineFragment extends Fragment implements AdapterView.OnItemSele
                     Record.delete(context, recordsDate.get(pos - 1));
                     initSpinner();
                 } else {
-                    Toast.makeText(context, "No record is selected.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getString(R.string.select_no), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -93,7 +93,7 @@ public class TimelineFragment extends Fragment implements AdapterView.OnItemSele
                     Log.i(TAG, "MAP onclick..");
                     startActivity(intent);
                 }else{
-                    Toast.makeText(context, "No record is selected.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getString(R.string.select_no), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -109,7 +109,7 @@ public class TimelineFragment extends Fragment implements AdapterView.OnItemSele
                     intent_chart.putExtra(EXTRA_MESSAGE, locations);
                     startActivity(intent_chart);
                 }else{
-                    Toast.makeText(context, "No record is selected.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getString(R.string.select_no), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -121,7 +121,7 @@ public class TimelineFragment extends Fragment implements AdapterView.OnItemSele
         recordsDate = Record.getRecords(context);
         SimpleDateFormat sdf = new SimpleDateFormat () ;
         ArrayList<String> datestr = new ArrayList<>();
-        datestr.add("Please select a record");
+        datestr.add(context.getString(R.string.select_prompt));
         for (Date date: recordsDate) {
             datestr.add(sdf.format(date));
         }

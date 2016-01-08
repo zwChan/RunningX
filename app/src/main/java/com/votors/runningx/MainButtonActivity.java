@@ -181,7 +181,7 @@ public class MainButtonActivity extends Activity implements android.location.Loc
                         record.save();
                         button_stop.setText(getResources().getString(R.string.saved));
                     }else{
-                        Toast.makeText(getBaseContext(), "No new data to be saved.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getBaseContext(), getResources().getString(R.string.no_data_save), Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -313,7 +313,7 @@ public class MainButtonActivity extends Activity implements android.location.Loc
             return;
         }
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+        builder.setMessage(getResources().getString(R.string.gps_prompt))
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
@@ -512,10 +512,10 @@ public class MainButtonActivity extends Activity implements android.location.Loc
                     Conf.INTERVAL_LOCATION * 1000L, Conf.MIN_DISTANCE * 0.1f, this);
             return true;
         } catch (SecurityException e) {
-            Toast.makeText(getBaseContext(), "The app do not have the permission to use GPS.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), getResources().getString(R.string.gps_no_permision), Toast.LENGTH_LONG).show();
             return false;
         }catch (Exception eall) {
-            Toast.makeText(getBaseContext(), "Listen to location fail. " + eall.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), getResources().getString(R.string.gps_listen_fail) + eall.getMessage(), Toast.LENGTH_LONG).show();
             return false;
         }
     }
@@ -524,10 +524,10 @@ public class MainButtonActivity extends Activity implements android.location.Loc
             manager.removeUpdates(this);
             return true;
         } catch (SecurityException e) {
-            Toast.makeText(getBaseContext(), "The app do not have the permission to use GPS.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), getResources().getString(R.string.gps_no_permision), Toast.LENGTH_LONG).show();
             return false;
         }catch (Exception eall) {
-            Toast.makeText(getBaseContext(), "Listen to location fail. " + eall.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), getResources().getString(R.string.gps_listen_fail) + eall.getMessage(), Toast.LENGTH_LONG).show();
             return false;
         }
     }
@@ -568,7 +568,7 @@ public class MainButtonActivity extends Activity implements android.location.Loc
         }
 
         if (l.hasAccuracy() && l.getAccuracy() > Conf.LOCATION_ACCURACY) {
-            Log.i(TAG, String.format("ACCURACY too low. %f", l.getAccuracy()));
+            Log.i(TAG, String.format(getResources().getString(R.string.gps_precision_low), l.getAccuracy()));
             if  (date.getTime()-preLowAccuracyTime < Conf.INTERVAL_LOCATION * 5 * 1000) {
                 lowAccuracyCnt++;
             } else {
@@ -576,7 +576,7 @@ public class MainButtonActivity extends Activity implements android.location.Loc
                     // low accuracy warning
                     mHandler.post(new Runnable() {
                         public void run() {
-                            Toast.makeText(getApplicationContext(), String.format("Gps accuracy too low, less than %dm", Conf.LOCATION_ACCURACY), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), String.format(getResources().getString(R.string.gps_precision_low2), Conf.LOCATION_ACCURACY), Toast.LENGTH_LONG).show();
                         }
                     });
                 }
@@ -680,15 +680,15 @@ public class MainButtonActivity extends Activity implements android.location.Loc
         } else if (!stop || (!saved && locations.size()>0)) {
             new AlertDialog.Builder(this)
                     .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setTitle("")
-                    .setMessage("You have unsaved running record, continue to exit?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    .setTitle(getResources().getString(R.string.exit_prompt))
+                    .setMessage(getResources().getString(R.string.exit_prompt))
+                    .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             finish();
                         }
                     })
-                    .setNegativeButton("No", null)
+                    .setNegativeButton(getResources().getString(R.string.no), null)
                     .show();
 
         } else  {
@@ -696,7 +696,7 @@ public class MainButtonActivity extends Activity implements android.location.Loc
                 super.onBackPressed();
                 return;
             } else {
-                Toast.makeText(getBaseContext(), "Tap back button twice in order to exit", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), getResources().getString(R.string.exit_prompt2), Toast.LENGTH_SHORT).show();
             }
             mBackPressed = System.currentTimeMillis();
         }
