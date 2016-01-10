@@ -73,6 +73,7 @@
         <item>@string/usa</item>
     </string-array>
 
+    <string name="gmap_no">Google service is not in available status, use other map.</string>
     <string name="gmap">Google Map</string>
     <string name="amap">Gaode Map</string>
     <string-array name="MAP_TYPE_LIST">

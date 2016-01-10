@@ -6,6 +6,10 @@ import android.os.Environment;
 import android.util.JsonReader;
 import android.util.JsonWriter;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,8 +44,16 @@ public class Conf {
     static public void init(Context context) {
         if (Conf.context == null) {
             Conf.context = context;
-            read();
         }
+        LENGTH_UNIT = context.getString(R.string.international);
+
+        if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS)
+        {
+            MAP_TYPE = context.getString(R.string.gmap);
+        } else {
+            MAP_TYPE = context.getString(R.string.amap);
+        }
+        read();
     }
 
     static boolean existConfFile() {
@@ -195,11 +207,15 @@ public class Conf {
     }
 
     public static Intent getMapIntent() {
+
         if (MAP_TYPE.equals(context.getResources().getString(R.string.gmap))) {
-            return new Intent(context, MapActivity.class);
-        } else {
-           return new Intent(context, MapActivity_gd.class);
+            if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) != ConnectionResult.SUCCESS) {
+                Toast.makeText(context, context.getString(R.string.gmap_no), Toast.LENGTH_LONG).show();
+            } else {
+                return new Intent(context, MapActivity.class);
+            }
         }
+        return new Intent(context, MapActivity_gd.class);
     }
 
     public static String getRootDir() {
