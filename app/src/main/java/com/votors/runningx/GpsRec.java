@@ -17,7 +17,7 @@ public class GpsRec implements Serializable {
     public Date date;
     transient public Location loc;  // only for computing
     public static final String TAG = "GpsRec";
-    private GCJPointer gcjPointer;
+    transient static private GCJPointer gcjPointer; //  only for location transform.
 
     protected GpsRec() {
     }
@@ -40,11 +40,23 @@ public class GpsRec implements Serializable {
         return lng;
     }
 
-    public double getLatChina() {
+    synchronized public double getLatChina() {
+        if (gcjPointer == null) {
+            gcjPointer = new GCJPointer(lat, lng);
+        } else {
+            gcjPointer.latitude = lat;
+            gcjPointer.longitude = lng;
+        }
         return gcjPointer.getLatitude();
     }
 
-    public double getLngChina() {
+    synchronized public double getLngChina() {
+        if (gcjPointer == null) {
+            gcjPointer = new GCJPointer(lat, lng);
+        } else {
+            gcjPointer.latitude = lat;
+            gcjPointer.longitude = lng;
+        }
         return gcjPointer.getLongitude();
     }
 
