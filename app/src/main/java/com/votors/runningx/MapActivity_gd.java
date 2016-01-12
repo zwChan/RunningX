@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
+import com.amap.api.maps2d.CoordinateConverter;
 import com.amap.api.maps2d.MapFragment;
 import com.amap.api.maps2d.SupportMapFragment;
 import com.amap.api.maps2d.model.BitmapDescriptorFactory;
@@ -33,7 +34,7 @@ public class MapActivity_gd extends FragmentActivity {
     public final static String EXTRA_MESSAGE = "com.votors.runningx.MESSAGE";
     private static final String BC_INTENT = "com.votors.runningx.BroadcastReceiver.location";
     public final static String EXTRA_GpsRec = "com.votors.runningx.GpsRec";
-
+    static CoordinateConverter converter  = new CoordinateConverter();
     // The Map Object
     private AMap mMap;
 
@@ -51,6 +52,23 @@ public class MapActivity_gd extends FragmentActivity {
 
     LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
+    /**
+     * convert gsp to gaode location.
+     * @param gps
+     */
+    synchronized public void convert (GpsRec gps) {
+        LatLng aLoc = new LatLng(gps.getLat(),gps.getLng());
+        converter.from(CoordinateConverter.CoordType.GPS);
+        converter.coord(aLoc);
+        try {
+            LatLng desLatLng = converter.convert();
+            gps.lat = desLatLng.latitude;
+            gps.lng = desLatLng.longitude;
+        }catch (Exception e) {
+            Log.i(TAG, "you can not convert this location " + aLoc.toString());
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +76,10 @@ public class MapActivity_gd extends FragmentActivity {
         Conf.init(getApplicationContext());
         setContentView(R.layout.main_map_gd);
         locations = (ArrayList<GpsRec>)getIntent().getSerializableExtra(EXTRA_MESSAGE);
-        for (GpsRec r: locations) total_dist += r.distance;
+        for (GpsRec r: locations) {
+            convert(r);
+            total_dist += r.distance;
+        }
 
 //        intentFilter.setPriority(3);
         registerReceiver(mReceiver, intentFilter);
@@ -87,7 +108,7 @@ public class MapActivity_gd extends FragmentActivity {
                 if (cnt==1 || cnt == locations.size() || (int)Math.floor(curr_dist / mark_distance) != (int)Math.floor((curr_dist +rec.distance)/ mark_distance)) {
                     // Add a new marker
                     MarkerOptions mk = new MarkerOptions()
-                            .position(new LatLng(rec.getLatChina(), rec.getLngChina()));
+                            .position(new LatLng(rec.getLat(), rec.getLng()));
 
                     // Set the title of the Marker's information window
                     if (cnt==1) {
@@ -117,10 +138,10 @@ public class MapActivity_gd extends FragmentActivity {
                     builder.include(mk.getPosition());
                 }
                 curr_dist += rec.distance;
-                center_lat += rec.getLatChina();
-                center_lng += rec.getLngChina();
+                center_lat += rec.getLat();
+                center_lng += rec.getLng();
 
-                polylines.add(new LatLng(rec.getLatChina(),rec.getLngChina()));
+                polylines.add(new LatLng(rec.getLat(),rec.getLng()));
             }
         }
 
@@ -212,6 +233,7 @@ public class MapActivity_gd extends FragmentActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             GpsRec rec = (GpsRec)intent.getSerializableExtra(EXTRA_GpsRec);
+            convert(rec);
             Log.i(TAG, "LocationReceiver, location " + rec.toString());
 
             final PolylineOptions polylines = new PolylineOptions();
@@ -219,7 +241,7 @@ public class MapActivity_gd extends FragmentActivity {
             polylines.color(Color.BLUE).width(10);
             if (locations.size()>0) {
                 last = locations.get(locations.size() - 1);
-                polylines.add(new LatLng(last.getLatChina(),last.getLngChina()));
+                polylines.add(new LatLng(last.getLat(),last.getLng()));
             }
 
             // If already run a long way, distance between mark should be larger.
@@ -227,7 +249,7 @@ public class MapActivity_gd extends FragmentActivity {
             if (movePointCnt == 0 || (int)Math.floor(curr_dist / mark_distance) !=  (int)Math.floor((curr_dist +rec.distance)/ mark_distance)) {
                 // Add a new marker
                 MarkerOptions mk = new MarkerOptions()
-                        .position(new LatLng(rec.getLatChina(), rec.getLngChina()));
+                        .position(new LatLng(rec.getLat(), rec.getLng()));
 
                 // Set the title of the Marker's information window
                 //mk.title(String.format("%.0fm,%.1fm/s",Math.floor(curr_dist + rec.distance),rec.speed));
@@ -245,13 +267,13 @@ public class MapActivity_gd extends FragmentActivity {
             movePointCnt++;
             curr_dist += rec.distance;
             total_dist += rec.distance;
-            center_lat += rec.getLatChina();
-            center_lng += rec.getLngChina();
+            center_lat += rec.getLat();
+            center_lng += rec.getLng();
             locations.add(rec);
 
-            polylines.add(new LatLng(rec.getLatChina(), rec.getLngChina()));
+            polylines.add(new LatLng(rec.getLat(), rec.getLng()));
             mMap.addPolyline(polylines);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(rec.getLatChina(), rec.getLngChina())));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(rec.getLat(), rec.getLng())));
             mMap.moveCamera(CameraUpdateFactory.zoomTo(mMap.getMaxZoomLevel() - 2));
         }
 

@@ -38,6 +38,9 @@
 
     <string name="restart_prompt">修改设置后，请重启应用程序。</string>
 
+    <string name="have_fun">Jason Chan: Have fun.</string>
+    <string name="open_source">RunHelper 是一个开源项目，详情请看链接: https://github.com/zwChan/RunningX</string>
+
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
         <item >奔跑吧! </item>

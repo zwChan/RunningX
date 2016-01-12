@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textSize="24dp"
-        android:text="Jason Chan: 'Have fun.'"/>
+        android:text="@string/have_fun"/>
     <TextView
         android:id="@+id/txtGithub"
         android:layout_width="wrap_content"
@@ -19,7 +19,7 @@
         android:layout_marginTop="30dp"
         android:padding="30dp"
         android:textSize="16dp"
-        android:text="RunHelper is an open source project. For more info, see: https://github.com/zwChan/RunningX" />
+        android:text="@string/open_source" />
 
     <ImageView android:layout_width="wrap_content"
         android:layout_height="wrap_content"
