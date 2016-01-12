@@ -1,51 +1,51 @@
 <resources>
     <string name="app_name">RunHelper</string>
-    <string name="start">START</string>
-    <string name="stop">STOP</string>
-    <string name="save">SAVE</string>
-    <string name="saved">SAVED</string>
-    <string name="chart">CHART</string>
-    <string name="pause">PAUSE</string>
-    <string name="resume">RESUME</string>
-    <string name="map">MAP</string>
-    <string name="time">Time</string>
-    <string name="distance">Distance</string>
-    <string name="speed">Speed</string>
-    <string name="delete">Delete</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="drawer_open">Slider Menu Opened</string>
-    <string name="drawer_close">Slider Menu Closed</string>
-    <string name="share">Share</string>
+    <string name="start">开始</string>
+    <string name="stop">停止</string>
+    <string name="save">保存</string>
+    <string name="saved">已保存</string>
+    <string name="chart">图表</string>
+    <string name="pause">暂停</string>
+    <string name="resume">恢复</string>
+    <string name="map">地图</string>
+    <string name="time">时间</string>
+    <string name="distance">距离</string>
+    <string name="speed">速度</string>
+    <string name="delete">删除</string>
+    <string name="action_settings">配置</string>
+    <string name="hello_world">你好，世界！</string>
+    <string name="drawer_open">已经打开侧滑菜单</string>
+    <string name="drawer_close">已经关闭侧滑菜单</string>
+    <string name="share">分享</string>
 
-    <string name="no_data_save">No new data to be saved</string>
-    <string name="gps_prompt">Your GPS seems to be disabled, do you want to enable it?</string>
-    <string name="gps_no_permision">The app do not have the permission to use GPS.</string>
-    <string name="gps_listen_fail">Listen to location fail. </string>
-    <string name="gps_precision_low">ACCURACY too low. %f</string>
-    <string name="gps_precision_low2">Gps accuracy too low, less than %dm</string>
+    <string name="no_data_save">没有新的数据可以保存。</string>
+    <string name="gps_prompt">当前GPS被禁用了， 确认要开启它吗？</string>
+    <string name="gps_no_permision">本应用程序没有权限使用GPS。</string>
+    <string name="gps_listen_fail">无法获取位置坐标。 </string>
+    <string name="gps_precision_low">精确度过低。%f</string>
+    <string name="gps_precision_low2">GPS精确度过低，低于%dm</string>
 
-    <string name="exit_prompt">You have unsaved running record, continue to exit?</string>
-    <string name="exit_prompt2">Tap back button twice in order to exit</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="end">end</string>
+    <string name="exit_prompt">尚未保存记录，确认要退出吗？</string>
+    <string name="exit_prompt2">点击两次返回键退出应用。</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="end">结束</string>
 
-    <string name="altitude">Altitude</string>
+    <string name="altitude">高度</string>
 
-    <string name="select_prompt">Please select a record</string>
-    <string name="select_no">No record is selected.</string>
+    <string name="select_prompt">请选择一条记录</string>
+    <string name="select_no">没有选中任何一条记录。</string>
 
-    <string name="restart_prompt">Restarting App is recommended after changing configuration.</string>
+    <string name="restart_prompt">修改设置后，请重启应用程序。</string>
 
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
-        <item >Run! </item>
+        <item >奔跑吧! </item>
         <!-- <item >Friends</item> -->
-        <item >History records</item>
+        <item >历史记录</item>
         <!--<item >Analysis</item>-->
-        <item >Configuration</item>
-        <item >About RunHelper</item>
+        <item >设置</item>
+        <item >关于RunHelper</item>
     </string-array>
     
     <!-- Nav Drawer List Item Icons -->
@@ -60,28 +60,28 @@
     </array>
 
     <string-array name="record_spinner">
-        <item>Select a record</item>
+        <item>请选择一条记录</item>
     </string-array>
 
     <!-- Content Description -->
-    <string name="desc_list_item_icon">Item Icon</string>
+    <string name="desc_list_item_icon">物品图标</string>
 
-    <string name="international">International</string>
-    <string name="usa">United States</string>
+    <string name="international">国际</string>
+    <string name="usa">美国</string>
     <string-array name="LENGTH_UNIT_LIST">
         <item>@string/international</item>
         <item>@string/usa</item>
     </string-array>
 
-    <string name="gmap_no">Google service is not in available status, use other map.</string>
-    <string name="gmap">Google Map</string>
-    <string name="amap">Gaode Map</string>
+    <string name="gmap_no">无法使用谷歌的服务，请使用其他地图。</string>
+    <string name="gmap">谷歌地图</string>
+    <string name="amap">高德地图</string>
     <string-array name="MAP_TYPE_LIST">
         <item>@string/gmap</item>
         <item>@string/amap</item>
     </string-array>
 
-    <string name="pace">Pace</string>
+    <string name="pace">步数</string>
     <string-array name="SPEED_TYPE_LIST">
         <item name="pace">@string/pace</item>
         <item name="speed">@string/speed</item>
@@ -121,7 +121,7 @@
         <item>30</item>
     </string-array>
     <string-array name="GPS_ONLY_LIST">
-        <item>True</item>
+        <item>是</item>
         <!--<item>False</item>-->
     </string-array>
     <string-array name="ACCELERATE_FACTOR_LIST">
