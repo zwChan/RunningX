@@ -1,51 +1,51 @@
 <resources>
     <string name="app_name">RunHelper</string>
-    <string name="start">��ʼ</string>
-    <string name="stop">ֹͣ</string>
-    <string name="save">����</string>
-    <string name="saved">�ѱ���</string>
-    <string name="chart">ͼ��</string>
-    <string name="pause">��ͣ</string>
-    <string name="resume">�ָ�</string>
-    <string name="map">��ͼ</string>
-    <string name="time">ʱ��</string>
-    <string name="distance">����</string>
-    <string name="speed">�ٶ�</string>
-    <string name="delete">ɾ��</string>
-    <string name="action_settings">����</string>
-    <string name="hello_world">��ã����磡</string>
-    <string name="drawer_open">�Ѿ��򿪲໬�˵�</string>
-    <string name="drawer_close">�Ѿ��رղ໬�˵�</string>
-    <string name="share">����</string>
+    <string name="start">开始</string>
+    <string name="stop">停止</string>
+    <string name="save">保存</string>
+    <string name="saved">已保存</string>
+    <string name="chart">图表</string>
+    <string name="pause">暂停</string>
+    <string name="resume">恢复</string>
+    <string name="map">地图</string>
+    <string name="time">时间</string>
+    <string name="distance">距离</string>
+    <string name="speed">速度</string>
+    <string name="delete">删除</string>
+    <string name="action_settings">设置</string>
+    <string name="hello_world">你好，世界！</string>
+    <string name="drawer_open">已经打开侧滑菜单</string>
+    <string name="drawer_close">已经关闭侧滑菜单</string>
+    <string name="share">分享</string>
 
-    <string name="no_data_save">û���µ����ݿ��Ա��档</string>
-    <string name="gps_prompt">��ǰGPS�������ˣ� ȷ��Ҫ��������</string>
-    <string name="gps_no_permision">��Ӧ�ó���û��Ȩ��ʹ��GPS��</string>
-    <string name="gps_listen_fail">�޷���ȡλ�����ꡣ </string>
-    <string name="gps_precision_low">��ȷ�ȹ��͡�%f</string>
-    <string name="gps_precision_low2">GPS��ȷ�ȹ��ͣ�����%dm</string>
+    <string name="no_data_save">没有新的数据可以保存。</string>
+    <string name="gps_prompt">当前GPS被禁用了， 确认要开启它吗？</string>
+    <string name="gps_no_permision">本应用程序没有权限使用GPS。</string>
+    <string name="gps_listen_fail">无法获取位置坐标。 </string>
+    <string name="gps_precision_low">精确度过低。%f</string>
+    <string name="gps_precision_low2">GPS精确度过低，低于%dm</string>
 
-    <string name="exit_prompt">��δ�����¼��ȷ��Ҫ�˳���</string>
-    <string name="exit_prompt2">������η��ؼ��˳�Ӧ�á�</string>
-    <string name="yes">��</string>
-    <string name="no">��</string>
-    <string name="end">����</string>
+    <string name="exit_prompt">尚未保存记录，确认要退出吗？</string>
+    <string name="exit_prompt2">点击两次返回键退出应用。</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="end">结束</string>
 
-    <string name="altitude">�߶�</string>
+    <string name="altitude">高度</string>
 
-    <string name="select_prompt">��ѡ��һ����¼</string>
-    <string name="select_no">û��ѡ���κ�һ����¼��</string>
+    <string name="select_prompt">请选择一条记录</string>
+    <string name="select_no">没有选中任何一条记录。</string>
 
-    <string name="restart_prompt">�޸����ú�������Ӧ�ó���</string>
+    <string name="restart_prompt">修改设置后，请重启应用程序。</string>
 
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
-        <item >���ܰ�! </item>
+        <item >奔跑吧! </item>
         <!-- <item >Friends</item> -->
-        <item >��ʷ��¼</item>
+        <item >历史记录</item>
         <!--<item >Analysis</item>-->
-        <item >����</item>
-        <item >����RunHelper</item>
+        <item >设置</item>
+        <item >关于RunHelper</item>
     </string-array>
     
     <!-- Nav Drawer List Item Icons -->
@@ -60,28 +60,28 @@
     </array>
 
     <string-array name="record_spinner">
-        <item>��ѡ��һ����¼</item>
+        <item>请选择一条记录</item>
     </string-array>
 
     <!-- Content Description -->
-    <string name="desc_list_item_icon">��Ʒͼ��</string>
+    <string name="desc_list_item_icon">物品图标</string>
 
-    <string name="international">����</string>
-    <string name="usa">����</string>
+    <string name="international">国际</string>
+    <string name="usa">美国</string>
     <string-array name="LENGTH_UNIT_LIST">
         <item>@string/international</item>
         <item>@string/usa</item>
     </string-array>
 
-    <string name="gmap_no">�޷�ʹ�ùȸ�ķ�����ʹ��������ͼ��</string>
-    <string name="gmap">�ȸ��ͼ</string>
-    <string name="amap">�ߵµ�ͼ</string>
+    <string name="gmap_no">无法使用谷歌的服务，请使用其他地图。</string>
+    <string name="gmap">谷歌地图</string>
+    <string name="amap">高德地图</string>
     <string-array name="MAP_TYPE_LIST">
         <item>@string/gmap</item>
         <item>@string/amap</item>
     </string-array>
 
-    <string name="pace">����</string>
+    <string name="pace">步数</string>
     <string-array name="SPEED_TYPE_LIST">
         <item name="pace">@string/pace</item>
         <item name="speed">@string/speed</item>
@@ -121,7 +121,7 @@
         <item>30</item>
     </string-array>
     <string-array name="GPS_ONLY_LIST">
-        <item>��</item>
+        <item>是</item>
         <!--<item>False</item>-->
     </string-array>
     <string-array name="ACCELERATE_FACTOR_LIST">
