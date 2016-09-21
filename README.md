@@ -59,5 +59,11 @@ Now it has the following functions:
 
 ## Have a funny running!
 
-## Google play
-[Google play store, https://play.google.com/store/apps/details?id=com.votors.runningx](https://play.google.com/store/apps/details?id=com.votors.runningx)
+## App stores
+### Google play
+- [Google play store, https://play.google.com/store/apps/details?id=com.votors.runningx](https://play.google.com/store/apps/details?id=com.votors.runningx)
+### Open QQ
+- [PC, http://android.myapp.com/myapp/detail.htm?apkName=com.votors.runningx](http://android.myapp.com/myapp/detail.htm?apkName=com.votors.runningx)
+- [Phone, http://a.app.qq.com/o/simple.jsp?pkgname=com.votors.runningx](http://a.app.qq.com/o/simple.jsp?pkgname=com.votors.runningx)
+### Open Baidu
+- TODO
