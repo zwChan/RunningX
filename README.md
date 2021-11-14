@@ -1,6 +1,6 @@
 # RunningX (RunHelper)
 
-I am going to take part in the half marathon in Tallahassee on Feb. 7th, 2016, but I can't find a 
+=7th, 2016, but I can't find a 
  appropriate app for the daily training running. At the same time, I am taking a mobile programming
  class, so I decide to develop a running app for the homework also for my daily running.
  
